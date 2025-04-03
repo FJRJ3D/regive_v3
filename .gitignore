@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Auto-generated Firebase config file (do not commit)
+lib/firebase_options.dart
