@@ -7,6 +7,7 @@ class CustomTextField extends ConsumerWidget {
   final IconData prefixIcon;
   final TextInputType keyboardType;
   final bool obscureText;
+  final TextEditingController? controller;
 
   const CustomTextField({
     super.key,
@@ -15,6 +16,7 @@ class CustomTextField extends ConsumerWidget {
     required this.prefixIcon,
     required this.keyboardType,
     this.obscureText = false,
+    this.controller,
   });
 
   @override
@@ -34,6 +36,7 @@ class CustomTextField extends ConsumerWidget {
           ],
         ),
         child: TextField(
+          controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             labelText: labelText,
