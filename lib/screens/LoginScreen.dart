@@ -6,15 +6,15 @@ import 'package:regive_v3/components/CustomTextField.dart';
 import 'package:regive_v3/navigators/AppRouter.dart';
 import 'package:regive_v3/repositories/AuthRepository.dart';
 
-class LoginRegisterScreen extends ConsumerStatefulWidget {
-  const LoginRegisterScreen({Key? key}) : super(key: key);
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<LoginRegisterScreen> createState() =>
-      _LoginRegisterScreenState();
+  ConsumerState<LoginScreen> createState() =>
+      _LoginScreenState();
 }
 
-class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -94,7 +94,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                       CustomElevatedButton(
                         text: 'Register',
                         onPressed: () {
-                          print('Register button pressed');
+                          AppNavigator().router.go('/register');
                         },
                         backgroundColor: const Color(0xFFE66A35),
                         foregroundColor: Colors.white,

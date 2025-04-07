@@ -18,7 +18,7 @@ class AuthRepository {
       );
       return userCredential;
     } on FirebaseAuthException catch (e) {
-      print('Error de autenticación: ${e.message}');
+      print('Authentication error: ${e.message}');
       return null;
     }
   }

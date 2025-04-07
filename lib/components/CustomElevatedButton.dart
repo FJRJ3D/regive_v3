@@ -6,6 +6,7 @@ class CustomElevatedButton extends ConsumerWidget {
   final VoidCallback onPressed;
   final Color backgroundColor;
   final Color foregroundColor;
+  final IconData? icon;
 
   const CustomElevatedButton({
     super.key,
@@ -13,6 +14,7 @@ class CustomElevatedButton extends ConsumerWidget {
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
+    this.icon,
   });
 
   @override
@@ -30,7 +32,9 @@ class CustomElevatedButton extends ConsumerWidget {
             borderRadius: BorderRadius.circular(50),
           ),
         ),
-        child: Text(text, style: TextStyle(fontWeight: FontWeight.bold)),
+        child: icon != null
+            ? Icon(icon, size: 22)
+            : Text(text, style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }
