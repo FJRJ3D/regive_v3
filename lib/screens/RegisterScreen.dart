@@ -17,27 +17,30 @@ class RegisterScreen extends ConsumerStatefulWidget {
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _displayNameController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _displayNameController.dispose();
     super.dispose();
   }
 
-  Future<void> _login() async {
+  Future<void> _register() async {
     final authRepository = ref.read(authRepositoryProvider);
-    final userCredential = await authRepository.signInWithEmailPassword(
-      _emailController.text,
-      _passwordController.text,
+    final userCredential = await authRepository.registerWithEmailPassword(
+      email: _emailController.text,
+      password: _passwordController.text,
+      displayName: _displayNameController.text,
     );
 
     if (userCredential != null) {
-      AppNavigator().router.go('/main');
+      AppNavigator().router.go('/');
     } else {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Authentication failed')));
+      ).showSnackBar(const SnackBar(content: Text('Password should be at least 6 characters')));
     }
   }
 
@@ -61,20 +64,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 SvgPicture.asset('assets/ReGive_logo_horizontal.svg', width: 190),
                 const SizedBox(height: 40),
                 CustomTextField(
-                  labelText: 'First name',
-                  hintText: 'Enter your password',
-                  prefixIcon: Icons.lock,
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: true,
-                  controller: _passwordController,
-                ),
-                CustomTextField(
-                  labelText: 'Last name',
-                  hintText: 'Enter your password',
-                  prefixIcon: Icons.lock,
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: true,
-                  controller: _passwordController,
+                  labelText: 'Display name',
+                  hintText: 'Enter your username',
+                  prefixIcon: Icons.drive_file_rename_outline,
+                  keyboardType: TextInputType.name,
+                  controller: _displayNameController,
                 ),
                 CustomTextField(
                   labelText: 'Email',
@@ -101,7 +95,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       CustomElevatedButton(
                         text: 'Enter',
                         onPressed: () async {
-                          await _login();
+                          await _register();
                         },
                         backgroundColor: const Color(0xFFE66A35),
                         foregroundColor: Colors.white,

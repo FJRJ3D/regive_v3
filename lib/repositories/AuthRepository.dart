@@ -16,11 +16,50 @@ class AuthRepository {
         email: email,
         password: password,
       );
+      await _forceTokenRefresh();
       return userCredential;
     } on FirebaseAuthException catch (e) {
       print('Authentication error: ${e.message}');
       return null;
     }
+  }
+
+  Future<UserCredential?> registerWithEmailPassword({
+    required String email,
+    required String password,
+    String? displayName,
+  }) async {
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (displayName != null) {
+        await userCredential.user?.updateDisplayName(displayName);
+        await userCredential.user?.reload();
+      }
+      await _forceTokenRefresh();
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      print('Registration error: ${e.message}');
+      return null;
+    }
+  }
+
+  Future<void> _forceTokenRefresh() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      await user.getIdToken(true);
+    }
+  }
+
+  User? getCurrentUser() {
+    return _auth.currentUser;
+  }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }
 
