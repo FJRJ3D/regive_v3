@@ -6,43 +6,14 @@ import 'package:regive_v3/components/CustomTextField.dart';
 import 'package:regive_v3/navigators/AppRouter.dart';
 import 'package:regive_v3/repositories/AuthRepository.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<LoginScreen> createState() =>
-      _LoginScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final TextEditingController _emailController = TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _login() async {
-    final authRepository = ref.read(authRepositoryProvider);
-    final userCredential = await authRepository.signInWithEmailPassword(
-      _emailController.text,
-      _passwordController.text,
-    );
-
-    if (userCredential != null) {
-      AppNavigator().router.go('/main');
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Authentication failed')));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -85,7 +56,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       CustomElevatedButton(
                         text: 'Login',
                         onPressed: () async {
-                          await _login();
+                          final userCredential = await ref.watch(
+                            signInWithEmailPasswordProvider(
+                              _emailController.text,
+                              _passwordController.text,
+                            ).future,
+                          );
+                          if (userCredential != null) {
+                            AppNavigator().router.go('/main');
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Authentication failed'),
+                              ),
+                            );
+                          }
                         },
                         backgroundColor: const Color(0xFFF6AE78),
                         foregroundColor: Colors.white,

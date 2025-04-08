@@ -16,4 +16,4 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 Ejecutar el build runner:
-dart run build_runner watch
+dart run build_runner build
