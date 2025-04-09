@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:regive_v3/components/CategoriesComponent.dart';
+import 'package:regive_v3/components/ProductsComponent.dart';
 
 class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
@@ -7,11 +9,16 @@ class MainScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: Text('Pantalla Principal')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {},
-          child: Text('Ir a otra pantalla'),
+      backgroundColor: Color(0xFFF3E4CF),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CategoriesComponent(),
+              ProductsComponent(),
+            ],
+          ),
         ),
       ),
     );
