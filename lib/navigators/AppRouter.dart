@@ -10,10 +10,16 @@ class AppNavigator {
     _router = GoRouter(
       initialLocation: '/',
       routes: [
+        // GoRoute(
+        //   path: '/',
+        //   builder: (context, state) => const LoginScreen(),
+        // ),
+        //=========================================================Poner bien, solo para pruebas
         GoRoute(
           path: '/',
-          builder: (context, state) => const LoginScreen(),
+          builder: (context, state) => const TabBarWidget(),
         ),
+        //=========================================================Poner bien, solo para pruebas
         GoRoute(path: '/main', builder: (context, state) => const TabBarWidget()),
         GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
       ],
