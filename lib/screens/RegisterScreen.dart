@@ -64,7 +64,7 @@ class RegisterScreen extends ConsumerWidget {
                       CustomElevatedButton(
                         text: 'Enter',
                         onPressed: () async {
-                          final userCredential = await ref.watch(
+                          final userCredential = await ref.read(
                             registerWithEmailPasswordProvider(
                               email: _emailController.text,
                               password: _passwordController.text,

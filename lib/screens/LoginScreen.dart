@@ -56,7 +56,7 @@ class LoginScreen extends ConsumerWidget {
                       CustomElevatedButton(
                         text: 'Login',
                         onPressed: () async {
-                          final userCredential = await ref.watch(
+                          final userCredential = await ref.read(
                             signInWithEmailPasswordProvider(
                               _emailController.text,
                               _passwordController.text,
