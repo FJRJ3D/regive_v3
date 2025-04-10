@@ -31,6 +31,7 @@ class TabBarWidget extends ConsumerWidget {
     return Scaffold(
       body: Container(
         width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFFEFA354), Color(0xFFE56230)],
@@ -40,7 +41,8 @@ class TabBarWidget extends ConsumerWidget {
         ),
         child: Column(
           children: [
-            SafeArea(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10, top: 35),
               child: SvgPicture.asset(
                 'assets/ReGive_logo_horizontal.svg',
                 width: 180,
@@ -48,7 +50,7 @@ class TabBarWidget extends ConsumerWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 65),
+                padding: const EdgeInsets.only(bottom: 45),
                 child: Container(
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFE0C0),
@@ -61,31 +63,32 @@ class TabBarWidget extends ConsumerWidget {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(20),
                           child: BottomNavigationBar(
+                            backgroundColor: Colors.transparent,
                             elevation: 0,
                             selectedItemColor: Color(0xFFC05A27),
                             unselectedItemColor: Color(0xFFE9773B),
                             currentIndex: currentIndex,
                             items: const <BottomNavigationBarItem>[
                               BottomNavigationBarItem(
-                                icon: Icon(Icons.home, size: 45),
+                                icon: Icon(Icons.home, size: 35),
                                 label: 'Home',
                               ),
                               BottomNavigationBarItem(
-                                icon: Icon(Icons.list, size: 45),
+                                icon: Icon(Icons.list, size: 35),
                                 label: 'My Requests',
                               ),
                               BottomNavigationBarItem(
-                                icon: Icon(Icons.widgets, size: 45),
+                                icon: Icon(Icons.widgets, size: 35),
                                 label: 'My Products',
                               ),
                               BottomNavigationBarItem(
-                                icon: Icon(Icons.message, size: 45),
+                                icon: Icon(Icons.message, size: 35),
                                 label: 'Messages',
                               ),
                               BottomNavigationBarItem(
-                                icon: Icon(Icons.settings, size: 45),
+                                icon: Icon(Icons.settings, size: 35),
                                 label: 'Configuration',
                               ),
                             ],

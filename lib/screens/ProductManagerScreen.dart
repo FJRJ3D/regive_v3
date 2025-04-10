@@ -19,7 +19,7 @@ class ProductManagerScreen extends ConsumerWidget {
               keyboardType: TextInputType.text,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.only(bottom: 10),
               child: Container(
                 decoration: BoxDecoration(
                   boxShadow: [
@@ -35,7 +35,7 @@ class ProductManagerScreen extends ConsumerWidget {
                 height: 140,
                 child: Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: 185,
                       height: double.infinity,
                       child: Image.network(
@@ -44,7 +44,7 @@ class ProductManagerScreen extends ConsumerWidget {
                       ),
                     ),
                   ],
-                )
+                ),
               ),
             ),
           ],
