@@ -50,7 +50,7 @@ class ProductManagerScreen extends ConsumerWidget {
                                   width: constraints.maxWidth * 0.43,
                                   height: double.infinity,
                                   child: Image.network(
-                                    'https://www.shutterstock.com/image-photo/collage-set-little-boys-autumn-260nw-2354637183.jpg',
+                                    'https://cdn.wallapop.com/images/10420/ij/if/__/c10420p1121163805/i5556199917.jpg?pictureSize=W640',
                                     fit: BoxFit.cover,
                                   ),
                                 ),
