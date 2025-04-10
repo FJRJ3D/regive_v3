@@ -33,17 +33,33 @@ class ProductManagerScreen extends ConsumerWidget {
                 ),
                 width: double.infinity,
                 height: 140,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 185,
-                      height: double.infinity,
-                      child: Image.network(
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Huismus%2C_man.jpg/250px-Huismus%2C_man.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ],
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Row(
+                      children: [
+                        SizedBox(
+                          width: constraints.maxWidth * 0.43,
+                          height: double.infinity,
+                          child: Image.network(
+                            'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Huismus%2C_man.jpg/250px-Huismus%2C_man.jpg',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              "Lote compuesto por  - chándal, pantalón con bolsillos y sudadera de cremallera ( la parte de delante tiene un mínimo...",
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: true,
+                              style: TextStyle(color: Color(0xFF8D8D8D)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
