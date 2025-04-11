@@ -19,9 +19,21 @@ class ProductRepository {
       throw Exception('Failed to fetch latest products: ${error}');
     }
   }
+
+  Future<Product> fetchProductById(String productId) async {
+      final productDocument = await firestore.collection('products').doc(productId).get();
+      final product = Product.formDocumentSnapshot(productDocument);
+      return product;
+  }
 }
 
 @riverpod
 ProductRepository productRepository(ProductRepositoryRef ref) {
   return ProductRepository(FirebaseFirestore.instance);
+}
+
+@riverpod
+Future<Product> fetchProductById(FetchProductByIdRef ref, String productId) async {
+  final repo = ref.watch(productRepositoryProvider);
+  return repo.fetchProductById(productId);
 }

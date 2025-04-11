@@ -19,9 +19,21 @@ class UserDetailsRepository {
     throw Exception('Failed to fetch usersData: $error');
     }
   }
+
+  Future<UserDetails> fetchUserDetailsById(String userDetailsId) async {
+      final userDetailsDocument = await firestore.collection('userDetails').doc(userDetailsId).get();
+      final userDetails = UserDetails.formDocumentSnapshot(userDetailsDocument);
+      return userDetails;
+  }
 }
 
 @riverpod
 UserDetailsRepository userDetailsRepository(UserDetailsRepositoryRef ref) {
   return UserDetailsRepository(FirebaseFirestore.instance);
+}
+
+@riverpod
+Future<UserDetails> fetchUserDetailsById(FetchUserDetailsByIdRef ref, String userDetailsId) async {
+  final repo = ref.watch(userDetailsRepositoryProvider);
+  return repo.fetchUserDetailsById(userDetailsId);
 }

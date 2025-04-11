@@ -1,15 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:regive_v3/repositories/product_repository.dart';
 import 'package:regive_v3/repositories/user_details_repository.dart';
 import 'package:regive_v3/services/product_service.dart';
 import 'package:regive_v3/services/product_service_provider.dart';
 import 'package:regive_v3/view_models/ProductWithUser.dart';
+import 'package:regive_v3/providers/global_providers.dart';
 
 class ProductsComponent extends ConsumerWidget {
   const ProductsComponent({super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productAsync = ref.watch(productsWithUsersProvider);
@@ -29,6 +30,12 @@ class ProductsComponent extends ConsumerWidget {
                 : 'No date';
 
             return Center(
+              child: GestureDetector(
+                onTap: () {
+                  ref.read(activeProductOwnerProvider.notifier).state = item.product.userDetailsId;
+                  ref.read(selectedProductProvider.notifier).state = item.product.id;
+                  GoRouter.of(context).push('/product-details');
+            },
               child: Container(
                 width: 500,
                 margin: const EdgeInsets.only(bottom: 16.0),
@@ -129,6 +136,7 @@ class ProductsComponent extends ConsumerWidget {
                   ),
                 ),
               ),
+            ),
             );
           },
         );
