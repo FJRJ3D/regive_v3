@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:regive_v3/navigators/TabBarWidget.dart';
 import 'package:regive_v3/screens/LoginScreen.dart';
+import 'package:regive_v3/screens/ProductDetailsScreen.dart';
 import 'package:regive_v3/screens/RegisterScreen.dart';
 
 class AppNavigator {
@@ -16,6 +17,10 @@ class AppNavigator {
         ),
         GoRoute(path: '/main', builder: (context, state) => const TabBarWidget()),
         GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
+        GoRoute(
+          path: '/product-details',
+          builder: (context, state) => ProductDetailsScreen(),
+        ),
       ],
     );
   }
