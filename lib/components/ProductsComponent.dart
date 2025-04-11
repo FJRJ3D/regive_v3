@@ -32,6 +32,7 @@ class ProductsComponent extends ConsumerWidget {
             return Center(
               child: GestureDetector(
                 onTap: () {
+                  ref.read(activeProductOwnerProvider.notifier).state = item.product.userDetailsId;
                   ref.read(selectedProductProvider.notifier).state = item.product.id;
                   GoRouter.of(context).push('/product-details');
             },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:regive_v3/components/OwnerComponent.dart';
 import 'package:regive_v3/components/ProductComponent.dart';
 import 'package:regive_v3/view_models/ProductWithUser.dart';
 
@@ -26,6 +27,7 @@ class ProductDetailsScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ProductComponent(),
+              OwnerComponent(),
             ],
           ),
         ),

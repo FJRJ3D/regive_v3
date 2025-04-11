@@ -1,4 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:regive_v3/models/Product.dart';
 
 
 final selectedProductProvider = StateProvider<String?>((ref) => null);
+
+final activeProductOwnerProvider = StateProvider<String?>((ref) => null);

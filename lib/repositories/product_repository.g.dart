@@ -25,5 +25,147 @@ final productRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ProductRepositoryRef = AutoDisposeProviderRef<ProductRepository>;
+String _$fetchProductByIdHash() => r'6032a06ab7c400525a9d18b5246abf43c2649d9a';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+/// See also [fetchProductById].
+@ProviderFor(fetchProductById)
+const fetchProductByIdProvider = FetchProductByIdFamily();
+
+/// See also [fetchProductById].
+class FetchProductByIdFamily extends Family<AsyncValue<Product>> {
+  /// See also [fetchProductById].
+  const FetchProductByIdFamily();
+
+  /// See also [fetchProductById].
+  FetchProductByIdProvider call(String productId) {
+    return FetchProductByIdProvider(productId);
+  }
+
+  @override
+  FetchProductByIdProvider getProviderOverride(
+    covariant FetchProductByIdProvider provider,
+  ) {
+    return call(provider.productId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'fetchProductByIdProvider';
+}
+
+/// See also [fetchProductById].
+class FetchProductByIdProvider extends AutoDisposeFutureProvider<Product> {
+  /// See also [fetchProductById].
+  FetchProductByIdProvider(String productId)
+    : this._internal(
+        (ref) => fetchProductById(ref as FetchProductByIdRef, productId),
+        from: fetchProductByIdProvider,
+        name: r'fetchProductByIdProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$fetchProductByIdHash,
+        dependencies: FetchProductByIdFamily._dependencies,
+        allTransitiveDependencies:
+            FetchProductByIdFamily._allTransitiveDependencies,
+        productId: productId,
+      );
+
+  FetchProductByIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.productId,
+  }) : super.internal();
+
+  final String productId;
+
+  @override
+  Override overrideWith(
+    FutureOr<Product> Function(FetchProductByIdRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchProductByIdProvider._internal(
+        (ref) => create(ref as FetchProductByIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        productId: productId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Product> createElement() {
+    return _FetchProductByIdProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FetchProductByIdProvider && other.productId == productId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, productId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin FetchProductByIdRef on AutoDisposeFutureProviderRef<Product> {
+  /// The parameter `productId` of this provider.
+  String get productId;
+}
+
+class _FetchProductByIdProviderElement
+    extends AutoDisposeFutureProviderElement<Product>
+    with FetchProductByIdRef {
+  _FetchProductByIdProviderElement(super.provider);
+
+  @override
+  String get productId => (origin as FetchProductByIdProvider).productId;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

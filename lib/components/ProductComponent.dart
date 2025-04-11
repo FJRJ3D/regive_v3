@@ -5,14 +5,6 @@ import 'package:regive_v3/repositories/product_repository.dart';
 import 'package:regive_v3/providers/global_providers.dart';
 import 'package:intl/intl.dart';
 
-final productProvider = FutureProvider.family<Product, String>((
-  ref,
-  productId,
-) {
-  final repository = ref.watch(productRepositoryProvider);
-  return repository.fetchProductById(productId);
-});
-
 class ProductComponent extends ConsumerWidget {
   const ProductComponent({super.key});
 
@@ -22,43 +14,83 @@ class ProductComponent extends ConsumerWidget {
     if (productId == null) {
       return const Center(child: Text('Product is not selected'));
     }
-    final product = ref.watch(productProvider(productId));
+
+    final product = ref.watch(fetchProductByIdProvider(productId));
+
     return product.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stackTrace) => Center(child: Text('Error: $error')),
-      data:
-          (product) => Column(
+      data: (product) {
+        return Container(
+          color: Colors.white,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Stack(
+                children: [
+                  Container(
+                    height: 250,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[50]
+                    ),
+                  ),
+                  Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.amber.withOpacity(0.3),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                  ),
+                  Container(
+                    height: 250,
+                    width: double.infinity,
+                    child: Image.network(
+                      product.imageUrl,
+                      fit: BoxFit.contain,
+                      errorBuilder:
+                          (context, error, stackTrace) => const Center(
+                        child: Icon(Icons.image_not_supported),
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment(-1.0, -0.3),
+                              end: Alignment(1.0, 0.3),
+                            colors: [
+                              Colors.white.withOpacity(0.0),
+                              Colors.white.withOpacity(0.2),
+                              Colors.white.withOpacity(0.0),
+                            ],
+                            stops: [0.35, 0.5, 0.65],
+                          ),
+                        ),
+                      ),
+                  ),
+                ],
+              ),
+
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  // horizontal: 16,
-                  // vertical: 8,
-                ),
+                padding: const EdgeInsets.symmetric(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                        AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Image.network(product.imageUrl),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
                               product.name,
@@ -71,21 +103,34 @@ class ProductComponent extends ConsumerWidget {
                             Text(
                               product.publishedDate.toDate() != null
                                   ? DateFormat(
-                                    'yyyy-MM-dd HH:mm',
+                                    'dd/MM/yyyy',
                                   ).format(product.publishedDate.toDate())
                                   : 'No date',
-                              style: TextStyle(fontSize: 13),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ],
                         ),
-                        Text(product.description),
+                        const SizedBox(height: 12),
+                        Text(
+                            product.description,
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                        ),
                       ],
+                      ),
                     ),
                   ],
                 ),
               ),
             ],
           ),
+        );
+      },
     );
   }
 }
