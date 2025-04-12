@@ -13,15 +13,15 @@ class ProductService {
 
   Future<List<ProductWithUser>> fetchProductsWithUsers() async {
     final productList = await productRepository.fetchLatestProducts();
-    final userIds = productList.map((product) => product.userDetailsId).toList();
-    final userDetailsList = await userDetailsRepository.fetchUserDetailsByIdsList(userIds);
+    final userIds = productList.map((product) => product.userId).toList();
+    final userDetailsList = await userDetailsRepository.fetchUserDetailsByUserIdsList(userIds);
 
     final userMap = {
       for (var userDetails in userDetailsList) userDetails.id: userDetails,
     };
 
     return productList.map((product) {
-      final user = userMap[product.userDetailsId];
+      final user = userMap[product.userId];
       return ProductWithUser(product: product, userDetails: user);
     }).toList();
   }
