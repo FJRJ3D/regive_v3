@@ -24,7 +24,7 @@ final orderRepositoryProvider = AutoDisposeProvider<OrderRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef OrderRepositoryRef = AutoDisposeProviderRef<OrderRepository>;
-String _$createAnOrderHash() => r'c958f87998fb1447b568c331c5e4e9d7f1cb3757';
+String _$createAnOrderHash() => r'ec1f4da2d6816e45a5b5a0f7ae92d18a9f7da7d4';
 
 /// Copied from Dart SDK
 class _SystemHash {
