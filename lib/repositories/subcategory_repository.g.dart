@@ -28,7 +28,7 @@ final subcategoryRepositoryProvider =
 typedef SubcategoryRepositoryRef =
     AutoDisposeProviderRef<SubcategoryRepository>;
 String _$fetchSubcategoriesByCategoryIdHash() =>
-    r'77aa9907b0704b0baeefcb0015d08f6569166f46';
+    r'4f7ffd2f16e9717cc35edcc3cffe41d914254e31';
 
 /// Copied from Dart SDK
 class _SystemHash {

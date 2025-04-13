@@ -28,7 +28,7 @@ final userDetailsRepositoryProvider =
 typedef UserDetailsRepositoryRef =
     AutoDisposeProviderRef<UserDetailsRepository>;
 String _$fetchUserDetailsByIdHash() =>
-    r'ad2bb62bc39455fb9622cc3fa49d7d30956c8e03';
+    r'54624bd116f499b93406c305484e9ef185b34002';
 
 /// Copied from Dart SDK
 class _SystemHash {
