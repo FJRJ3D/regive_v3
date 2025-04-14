@@ -51,7 +51,8 @@ class ProductRepository {
     return product;
   }
 
-  Future<List<Product>> fetchProductsWithUsersBySearch(String inputtedText, DocumentSnapshot lastDocument) async {
+  Future<List<Product>> fetchProductsBySearch(Ref ref, String inputtedText) async {
+    final lastDocument = ref.read(lastProductSearchedDocProvider);
     final inputtedTextLowCase = inputtedText.toLowerCase();
     final wordsSplit = inputtedTextLowCase.split(' ');
     Query<Map<String, dynamic>> query = firestore.collection('products').where('keywords', arrayContainsAny: wordsSplit).limit(5);
@@ -84,7 +85,7 @@ Future<Product> fetchProductById(
 }
 
 @riverpod
-Future<List<Product>> fetchProductsWithUsersBySearch(FetchProductsWithUsersBySearchRef ref,String inputtedText, DocumentSnapshot lastDocument) async {
+Future<List<Product>> fetchProductsBySearch(FetchProductsBySearchRef ref,String inputtedText) async {
   final repo = ref.watch(productRepositoryProvider);
-  return repo.fetchProductsWithUsersBySearch(inputtedText, lastDocument);
+  return repo.fetchProductsBySearch(ref, inputtedText);
 }

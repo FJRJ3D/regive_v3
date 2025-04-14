@@ -167,33 +167,28 @@ class _FetchProductByIdProviderElement
   String get productId => (origin as FetchProductByIdProvider).productId;
 }
 
-String _$fetchProductsWithUsersBySearchHash() =>
-    r'31431c3fdb1539ab7e8a7d754ffa21c604628ec1';
+String _$fetchProductsBySearchHash() =>
+    r'2e877b05e78732b8ee914d1d8b78ecb0446dfd14';
 
-/// See also [fetchProductsWithUsersBySearch].
-@ProviderFor(fetchProductsWithUsersBySearch)
-const fetchProductsWithUsersBySearchProvider =
-    FetchProductsWithUsersBySearchFamily();
+/// See also [fetchProductsBySearch].
+@ProviderFor(fetchProductsBySearch)
+const fetchProductsBySearchProvider = FetchProductsBySearchFamily();
 
-/// See also [fetchProductsWithUsersBySearch].
-class FetchProductsWithUsersBySearchFamily
-    extends Family<AsyncValue<List<Product>>> {
-  /// See also [fetchProductsWithUsersBySearch].
-  const FetchProductsWithUsersBySearchFamily();
+/// See also [fetchProductsBySearch].
+class FetchProductsBySearchFamily extends Family<AsyncValue<List<Product>>> {
+  /// See also [fetchProductsBySearch].
+  const FetchProductsBySearchFamily();
 
-  /// See also [fetchProductsWithUsersBySearch].
-  FetchProductsWithUsersBySearchProvider call(
-    String inputtedText,
-    DocumentSnapshot<Object?> lastDocument,
-  ) {
-    return FetchProductsWithUsersBySearchProvider(inputtedText, lastDocument);
+  /// See also [fetchProductsBySearch].
+  FetchProductsBySearchProvider call(String inputtedText) {
+    return FetchProductsBySearchProvider(inputtedText);
   }
 
   @override
-  FetchProductsWithUsersBySearchProvider getProviderOverride(
-    covariant FetchProductsWithUsersBySearchProvider provider,
+  FetchProductsBySearchProvider getProviderOverride(
+    covariant FetchProductsBySearchProvider provider,
   ) {
-    return call(provider.inputtedText, provider.lastDocument);
+    return call(provider.inputtedText);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -208,36 +203,32 @@ class FetchProductsWithUsersBySearchFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'fetchProductsWithUsersBySearchProvider';
+  String? get name => r'fetchProductsBySearchProvider';
 }
 
-/// See also [fetchProductsWithUsersBySearch].
-class FetchProductsWithUsersBySearchProvider
+/// See also [fetchProductsBySearch].
+class FetchProductsBySearchProvider
     extends AutoDisposeFutureProvider<List<Product>> {
-  /// See also [fetchProductsWithUsersBySearch].
-  FetchProductsWithUsersBySearchProvider(
-    String inputtedText,
-    DocumentSnapshot<Object?> lastDocument,
-  ) : this._internal(
-        (ref) => fetchProductsWithUsersBySearch(
-          ref as FetchProductsWithUsersBySearchRef,
+  /// See also [fetchProductsBySearch].
+  FetchProductsBySearchProvider(String inputtedText)
+    : this._internal(
+        (ref) => fetchProductsBySearch(
+          ref as FetchProductsBySearchRef,
           inputtedText,
-          lastDocument,
         ),
-        from: fetchProductsWithUsersBySearchProvider,
-        name: r'fetchProductsWithUsersBySearchProvider',
+        from: fetchProductsBySearchProvider,
+        name: r'fetchProductsBySearchProvider',
         debugGetCreateSourceHash:
             const bool.fromEnvironment('dart.vm.product')
                 ? null
-                : _$fetchProductsWithUsersBySearchHash,
-        dependencies: FetchProductsWithUsersBySearchFamily._dependencies,
+                : _$fetchProductsBySearchHash,
+        dependencies: FetchProductsBySearchFamily._dependencies,
         allTransitiveDependencies:
-            FetchProductsWithUsersBySearchFamily._allTransitiveDependencies,
+            FetchProductsBySearchFamily._allTransitiveDependencies,
         inputtedText: inputtedText,
-        lastDocument: lastDocument,
       );
 
-  FetchProductsWithUsersBySearchProvider._internal(
+  FetchProductsBySearchProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -245,49 +236,43 @@ class FetchProductsWithUsersBySearchProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.inputtedText,
-    required this.lastDocument,
   }) : super.internal();
 
   final String inputtedText;
-  final DocumentSnapshot<Object?> lastDocument;
 
   @override
   Override overrideWith(
-    FutureOr<List<Product>> Function(FetchProductsWithUsersBySearchRef provider)
-    create,
+    FutureOr<List<Product>> Function(FetchProductsBySearchRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FetchProductsWithUsersBySearchProvider._internal(
-        (ref) => create(ref as FetchProductsWithUsersBySearchRef),
+      override: FetchProductsBySearchProvider._internal(
+        (ref) => create(ref as FetchProductsBySearchRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         inputtedText: inputtedText,
-        lastDocument: lastDocument,
       ),
     );
   }
 
   @override
   AutoDisposeFutureProviderElement<List<Product>> createElement() {
-    return _FetchProductsWithUsersBySearchProviderElement(this);
+    return _FetchProductsBySearchProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FetchProductsWithUsersBySearchProvider &&
-        other.inputtedText == inputtedText &&
-        other.lastDocument == lastDocument;
+    return other is FetchProductsBySearchProvider &&
+        other.inputtedText == inputtedText;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, inputtedText.hashCode);
-    hash = _SystemHash.combine(hash, lastDocument.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -295,26 +280,19 @@ class FetchProductsWithUsersBySearchProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin FetchProductsWithUsersBySearchRef
-    on AutoDisposeFutureProviderRef<List<Product>> {
+mixin FetchProductsBySearchRef on AutoDisposeFutureProviderRef<List<Product>> {
   /// The parameter `inputtedText` of this provider.
   String get inputtedText;
-
-  /// The parameter `lastDocument` of this provider.
-  DocumentSnapshot<Object?> get lastDocument;
 }
 
-class _FetchProductsWithUsersBySearchProviderElement
+class _FetchProductsBySearchProviderElement
     extends AutoDisposeFutureProviderElement<List<Product>>
-    with FetchProductsWithUsersBySearchRef {
-  _FetchProductsWithUsersBySearchProviderElement(super.provider);
+    with FetchProductsBySearchRef {
+  _FetchProductsBySearchProviderElement(super.provider);
 
   @override
   String get inputtedText =>
-      (origin as FetchProductsWithUsersBySearchProvider).inputtedText;
-  @override
-  DocumentSnapshot<Object?> get lastDocument =>
-      (origin as FetchProductsWithUsersBySearchProvider).lastDocument;
+      (origin as FetchProductsBySearchProvider).inputtedText;
 }
 
 // ignore_for_file: type=lint

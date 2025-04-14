@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:regive_v3/models/Product.dart';
 import 'package:regive_v3/models/UserDetails.dart';
 import 'package:regive_v3/repositories/product_repository.dart';
 import 'package:regive_v3/repositories/user_details_repository.dart';
@@ -32,6 +34,25 @@ class ProductService {
     return productWithUserList;
   }
 
+  Future<List<ProductWithUser>> fetchProductWithUserBySearch(Ref ref, String inputtedText) async {
+    final productList = await productRepository.fetchProductsBySearch(ref, inputtedText);
+    return _formObjectProductWithUserByProductList(productList);
+  }
+
+  Future<List<ProductWithUser>> _formObjectProductWithUserByProductList(List<Product> productList) async {
+    final userIds = productList.map((product) => product.userId).toSet().toList();
+    final userDetailsList = await userDetailsRepository.fetchUserDetailsByUserIdsList(userIds);
+
+    final userMap = {
+      for (var userDetails in userDetailsList) userDetails.userId: userDetails,
+    };
+
+    final productWithUserList = productList.map((product) {
+      final user = userMap[product.userId];
+      return ProductWithUser(product: product, userDetails: user);
+    }).toList();
+    return productWithUserList;
+  }
 }
 
 
@@ -47,4 +68,10 @@ ProductService productService(ProductServiceRef ref) {
 Future<List<ProductWithUser>> fetchProductsWithUsers(FetchProductsWithUsersRef ref) async {
   final service = ref.watch(productServiceProvider);
   return service.fetchProductsWithUsers(ref);
+}
+
+@riverpod
+Future<List<ProductWithUser>> fetchProductWithUserBySearch(FetchProductWithUserBySearchRef ref, String inputtedText) async {
+  final service = ref.watch(productServiceProvider);
+  return service.fetchProductWithUserBySearch(ref, inputtedText);
 }

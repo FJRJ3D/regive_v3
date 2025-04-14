@@ -20,3 +20,5 @@ final productsNotifierProvider = StateNotifierProvider<ProductsNotifier, List<Pr
     return ProductsNotifier(productService, ref);
   },
 );
+
+final lastProductSearchedDocProvider = StateProvider<DocumentSnapshot?>((ref) => null);
