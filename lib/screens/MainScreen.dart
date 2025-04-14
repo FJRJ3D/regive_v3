@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:regive_v3/components/CategoriesComponent.dart';
-import 'package:regive_v3/components/ProductsComponent.dart';
+import 'package:regive_v3/components/ProductWithOwnerComponent.dart';
 import 'package:regive_v3/providers/global_providers.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
