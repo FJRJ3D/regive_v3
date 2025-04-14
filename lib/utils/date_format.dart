@@ -13,6 +13,6 @@ String formatDate(FormattedWasOnlineRef , ref, DateTime dataTime) {
     return "today ${time}"; }
   if (checkDate == yesterday) {
     return "yesterday ${time}"; }
-  final date = DateFormat('d MMM', 'uk').format(dataTime);
+  final date = DateFormat('d MMM', 'en').format(dataTime);
   return "${date} ${time}";
 }

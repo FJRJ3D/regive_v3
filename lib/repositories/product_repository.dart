@@ -13,6 +13,7 @@ class ProductRepository {
 
   Future<List<Product>> fetchLatestProducts(Ref ref) async {
     final lastProductDoc = ref.read(lastProductDocProvider);
+    print("products is started");
     QuerySnapshot<Map<String, dynamic>> productsSnapshot;
     if (lastProductDoc == null) {
       productsSnapshot =
@@ -33,6 +34,7 @@ class ProductRepository {
     if (productsSnapshot.docs.isNotEmpty) {
       ref.read(lastProductDocProvider.notifier).state =
           productsSnapshot.docs.last;
+      print('last document saved');
     }
     final productList =
         productsSnapshot.docs
