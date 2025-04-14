@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:regive_v3/models/Product.dart';
 import 'package:regive_v3/providers/global_providers.dart';
+import 'package:regive_v3/view_models/ProductWithUser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'product_repository.g.dart';
@@ -49,6 +50,23 @@ class ProductRepository {
     final product = Product.formDocumentSnapshot(productDocument);
     return product;
   }
+
+  Future<List<Product>> fetchProductsWithUsersBySearch(String inputtedText, DocumentSnapshot lastDocument) async {
+    final inputtedTextLowCase = inputtedText.toLowerCase();
+    final wordsSplit = inputtedTextLowCase.split(' ');
+    Query<Map<String, dynamic>> query = firestore.collection('products').where('keywords', arrayContainsAny: wordsSplit).limit(5);
+
+    if (lastDocument != null) {
+      query = query.startAfterDocument(lastDocument);
+    }
+
+    final productsSnapshot = await query.get();
+    final productList =
+    productsSnapshot.docs
+        .map((doc) => Product.formDocumentSnapshot(doc))
+        .toList();
+    return productList;
+  }
 }
 
 @riverpod
@@ -63,4 +81,10 @@ Future<Product> fetchProductById(
 ) async {
   final repo = ref.watch(productRepositoryProvider);
   return repo.fetchProductById(productId);
+}
+
+@riverpod
+Future<List<Product>> fetchProductsWithUsersBySearch(FetchProductsWithUsersBySearchRef ref,String inputtedText, DocumentSnapshot lastDocument) async {
+  final repo = ref.watch(productRepositoryProvider);
+  return repo.fetchProductsWithUsersBySearch(inputtedText, lastDocument);
 }

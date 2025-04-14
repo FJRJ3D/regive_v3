@@ -6,7 +6,7 @@ part of 'date_format.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$formatDateHash() => r'c87462ecc2ad6d5fb478f5246ce4f3bb16936f2a';
+String _$formatDateHash() => r'2ae6ee567422301a9b1d594e21092c6c16467b59';
 
 /// Copied from Dart SDK
 class _SystemHash {
