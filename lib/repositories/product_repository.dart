@@ -49,7 +49,6 @@ Future<void> createProductWithCurrentUser(
     throw Exception('No user is currently signed in');
   }
 
-  // 1. Selecciona la imagen del dispositivo
   final ImagePicker picker = ImagePicker();
   final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
@@ -57,24 +56,20 @@ Future<void> createProductWithCurrentUser(
     throw Exception('No image selected');
   }
 
-  // 2. Subir la imagen a Firebase Storage
   final storageRef = FirebaseStorage.instance.ref().child('product_images/${pickedFile.name}');
   final uploadTask = storageRef.putFile(File(pickedFile.path));
 
-  // Espera a que el archivo se suba
   final taskSnapshot = await uploadTask.whenComplete(() {});
 
-  // 3. Obtener la URL de la imagen subida
   final imageUrl = await taskSnapshot.ref.getDownloadURL();
 
-  // 4. Crea el producto y guárdalo en Firestore
   final productRef = FirebaseFirestore.instance.collection('products').doc();
 
   await productRef.set({
     'name': productRequest.name,
     'description': productRequest.description,
     'publishedDate': Timestamp.now(),
-    'imageUrl': imageUrl, // Usamos la URL del archivo subido
+    'imageUrl': imageUrl,
     'userDetailsId': user.uid,
   });
 
