@@ -5,7 +5,7 @@ import 'package:regive_v3/providers/products_notifier.dart';
 import 'package:regive_v3/providers/products_search_notifier.dart';
 import 'package:regive_v3/services/product_service.dart';
 import 'package:regive_v3/view_models/ProductWithUser.dart';
-
+import 'package:image_picker/image_picker.dart';
 
 final selectedProductProvider = StateProvider<String?>((ref) => null);
 
@@ -32,3 +32,5 @@ final productSearchNotifierProvider = StateNotifierProvider<ProductSearchNotifie
       return ProductSearchNotifier(productService, ref);
     },
 );
+
+final capturedImageProvider = StateProvider<XFile?>((ref) => null);
