@@ -53,20 +53,16 @@ class ProductRepository {
 
   Future<List<Product>> fetchProductsBySearch(Ref ref) async {
     final inputtedText = ref.watch(inputtedTextToSearchProvider);
-    print("text what the user has inputted: $inputtedText");
     if(inputtedText == null) {
       throw Exception("You can't search without white anything into input");
     }
-    print("repository recives text inputed: $inputtedText");
     final lastDocument = ref.read(lastProductSearchedDocProvider);
-    print("last document $lastDocument");
     final inputtedTextLowCase = inputtedText.toLowerCase();
     final wordsSplit = inputtedTextLowCase
         .split(' ')
         .map((word) => word.trim())
         .where((word) => word.isNotEmpty)
         .toList();
-    print("words splitted: $wordsSplit");
     if (wordsSplit.isEmpty) {
       print("No valid search terms");
       throw Exception('Words are empty');
@@ -75,10 +71,9 @@ class ProductRepository {
     if (lastDocument != null) {
       query = query.startAfterDocument(lastDocument);
     }
-    print("Query: ${query.toString()}");
 
     final productsSnapshot = await query.get();
-    print('you have recieved objects document: $productsSnapshot');
+    ref.read(lastProductSearchedDocProvider.notifier).state = productsSnapshot.docs.last;
     final productList =
     productsSnapshot.docs
         .map((doc) => Product.formDocumentSnapshot(doc))

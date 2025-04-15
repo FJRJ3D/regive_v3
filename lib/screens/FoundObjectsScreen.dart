@@ -18,7 +18,7 @@ class _MainScreenState extends ConsumerState<FoundObjectsScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(productsNotifierProvider.notifier).loadMoreProducts();
+    ref.read(productSearchNotifierProvider.notifier).loadMoreSearchedProducts();
     _scrollController.addListener(_onScroll);
   }
 
