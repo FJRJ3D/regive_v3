@@ -17,3 +17,6 @@ samples, guidance on mobile development, and a full API reference.
 
 Ejecutar el build runner:
 dart run build_runner build
+
+rm lib/repositories/*.g.dart
+dart run build_runner build
