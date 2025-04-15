@@ -5,13 +5,11 @@ class ProductCategory {
   final String id;
   final String name;
   final String imageUrl;
-  List<Subcategory> subcategoryList;
 
   ProductCategory({
     required this.id,
     required this.name,
     required this.imageUrl,
-    this.subcategoryList = const [],
   });
 
   Map<String, dynamic> toMap() {

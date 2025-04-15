@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:regive_v3/main.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'AuthRepository.g.dart';
@@ -54,4 +57,13 @@ Future<void> _forceTokenRefresh() async {
   if (user != null) {
     await user.getIdToken(true);
   }
+}
+
+@riverpod
+Future<String> getUserId(GetUserIdRef ref) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if(user == null) {
+    return throw Exception('User is not authenticated');
+  }
+  return user.uid;
 }

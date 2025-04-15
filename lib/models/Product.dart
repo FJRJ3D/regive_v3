@@ -6,7 +6,8 @@ class Product {
   final String description;
   final Timestamp publishedDate;
   final String imageUrl;
-  final String userDetailsId;
+  final String userId;
+  final List<dynamic> keywords;
 
   Product({
     required this.id,
@@ -14,7 +15,8 @@ class Product {
     required this.description,
     required this.publishedDate,
     required this.imageUrl,
-    required this.userDetailsId,
+    required this.userId,
+    required this.keywords,
 });
 
   Map<String, dynamic> toMap() {
@@ -24,13 +26,24 @@ class Product {
       'description': description,
       'publishedDate': publishedDate,
       'imageUrl': imageUrl,
-      'userDetailsId': userDetailsId,
+      'userId': userId,
+      'keywords': keywords,
     };
   }
 
   factory Product.formDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
-    final data = doc.data()!;
-    return Product(id: doc.id, name: data['name'], description: data['description'], publishedDate: data['publishedDate'], imageUrl: data['imageUrl'], userDetailsId: data['userDetailsId']);
+    final data = doc.data() ?? {};
+
+    return Product(
+      id: doc.id,
+      name: data['name'] ?? '',
+      description: data['description'] ?? '',
+      publishedDate: data['publishedDate'] ?? Timestamp.now(),
+      imageUrl: data['imageUrl'] ?? '',
+      userId: data['userId'] ?? '',
+      keywords: data['keywords'] ?? [],
+    );
   }
+
 
 }

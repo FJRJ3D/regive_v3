@@ -5,26 +5,26 @@ import 'package:regive_v3/components/ProductWithOwnerComponent.dart';
 import 'package:regive_v3/components/SearchComponent.dart';
 import 'package:regive_v3/providers/global_providers.dart';
 
-class MainScreen extends ConsumerStatefulWidget {
-  const MainScreen({super.key});
+class FoundObjectsScreen extends ConsumerStatefulWidget {
+  const FoundObjectsScreen({super.key});
 
   @override
-  ConsumerState<MainScreen> createState() => _MainScreenState();
+  ConsumerState<FoundObjectsScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends ConsumerState<MainScreen> {
+class _MainScreenState extends ConsumerState<FoundObjectsScreen> {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    ref.read(productsNotifierProvider.notifier).loadMoreProducts();
+    ref.read(productSearchNotifierProvider.notifier).loadMoreSearchedProducts();
     _scrollController.addListener(_onScroll);
   }
 
   void _onScroll() {
     if(_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
-      ref.read(productsNotifierProvider.notifier).loadMoreProducts();
+      ref.read(productSearchNotifierProvider.notifier).loadMoreSearchedProducts();
     }
   }
 
@@ -36,7 +36,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final productsWithUsers = ref.watch(productsNotifierProvider);
+    final productsWithUsers = ref.watch(productSearchNotifierProvider);
 
     return Scaffold(
       backgroundColor: Color(0xFFF3E4CF),
@@ -47,13 +47,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             SliverToBoxAdapter(
               child: SearchComponent(),
             ),
-            SliverToBoxAdapter(
-              child: CategoriesComponent(),
-            ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      final product = productsWithUsers[index];
+                  final product = productsWithUsers[index];
                   return ProductsComponent(item: product);
                 },
                 childCount: productsWithUsers.length,

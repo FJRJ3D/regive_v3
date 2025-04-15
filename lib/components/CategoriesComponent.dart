@@ -2,14 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:regive_v3/models/ProductCategory.dart';
 import 'package:regive_v3/models/Subcategory.dart';
-import '../repositories/CategoryRepository.dart';
+import 'package:regive_v3/providers/global_providers.dart';
+import '../repositories/category_repository.dart';
 import '../components/SubcategoriesComponent.dart';
-
-final categoryRepositoryProvider = Provider((ref) => CategoryRepository());
-final categoriesProvider = FutureProvider<List<ProductCategory>>((ref) {
-  final repository = ref.watch(categoryRepositoryProvider);
-  return repository.fetchCategoriesWithSubcategories();
-});
 
 class CategoriesComponent extends ConsumerStatefulWidget {
   const CategoriesComponent({super.key});
@@ -20,23 +15,23 @@ class CategoriesComponent extends ConsumerStatefulWidget {
 
 class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
   String? selectedCategoryId;
+  String? selectedCategoryName;
 
   @override
   Widget build(BuildContext context) {
-    final categoriesAsync = ref.watch(categoriesProvider);
+    final categoriesAsync = ref.watch(fetchAllCategoriesProvider);
 
     return categoriesAsync.when(
       data: (categories) {
         return Column(
           children: [
-            // Categories grid (4 per row)
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-                childAspectRatio: 1.1,
-                crossAxisSpacing: 8,
+                childAspectRatio: 1,
+                crossAxisSpacing: 1,
               ),
               itemCount: categories.length,
               itemBuilder: (context, index) {
@@ -48,8 +43,16 @@ class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
                     setState(() {
                       if (selectedCategoryId == category.id) {
                         selectedCategoryId = null;
+                        selectedCategoryName = null;
+                        ref.read(activeCategoryDataProvider.notifier).state =
+                            {};
                       } else {
                         selectedCategoryId = category.id;
+                        selectedCategoryName = category.name;
+                        ref.read(activeCategoryDataProvider.notifier).state = {
+                          'id': selectedCategoryId,
+                          'categoryName': selectedCategoryName,
+                        };
                       }
                     });
                   },
@@ -58,10 +61,13 @@ class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
                     children: [
                       CircleAvatar(
                         radius: 34,
-                        backgroundColor: isSelected ? Colors.blue[200] : Colors.blue[100],
-                        backgroundImage: category.imageUrl != null
-                            ? NetworkImage(category.imageUrl!)
-                            : const AssetImage('assets/no_image.png') as ImageProvider,
+                        backgroundColor:
+                            isSelected ? Colors.blue[200] : Colors.blue[100],
+                        backgroundImage:
+                            category.imageUrl != null
+                                ? NetworkImage(category.imageUrl!)
+                                : const AssetImage('assets/no_image.png')
+                                    as ImageProvider,
                       ),
                       const SizedBox(height: 6),
                       Padding(
@@ -70,7 +76,10 @@ class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
                           category.name,
                           style: TextStyle(
                             fontSize: 13,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight:
+                                isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
                           ),
                           textAlign: TextAlign.center,
                           maxLines: 2,
@@ -85,7 +94,6 @@ class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
 
             if (selectedCategoryId != null)
               Container(
-                margin: const EdgeInsets.only(top: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -99,13 +107,7 @@ class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
                         ),
                       ),
                     ),
-                    SubcategoryComponent(
-                        subcategoryList: categories
-                            .firstWhere((cat) => cat.id == selectedCategoryId)
-                            .subcategoryList ?? [],
-                        categoryName: categories.firstWhere((category) => category.id == selectedCategoryId)
-                      .name,
-                    ),
+                    SubcategoryComponent(),
                   ],
                 ),
               ),
