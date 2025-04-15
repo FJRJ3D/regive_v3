@@ -45,7 +45,10 @@ class _MainScreenState extends ConsumerState<FoundObjectsScreen> {
           controller: _scrollController,
           slivers: [
             SliverToBoxAdapter(
-              child: SearchComponent(),
+              child: Padding (
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                child: SearchComponent(),
+              ),
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
