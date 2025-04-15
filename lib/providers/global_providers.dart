@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:regive_v3/models/Product.dart';
 import 'package:regive_v3/providers/products_notifier.dart';
+import 'package:regive_v3/providers/products_search_notifier.dart';
 import 'package:regive_v3/services/product_service.dart';
 import 'package:regive_v3/view_models/ProductWithUser.dart';
 
@@ -22,3 +23,12 @@ final productsNotifierProvider = StateNotifierProvider<ProductsNotifier, List<Pr
 );
 
 final lastProductSearchedDocProvider = StateProvider<DocumentSnapshot?>((ref) => null);
+
+final inputtedTextToSearchProvider = StateProvider<String?>((ref) => null);
+
+final productSearchNotifierProvider = StateNotifierProvider<ProductSearchNotifier, List<ProductWithUser>>(
+    (ref) {
+      final productService = ref.watch(productServiceProvider);
+      return ProductSearchNotifier(productService, ref);
+    },
+);

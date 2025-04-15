@@ -46,7 +46,7 @@ final fetchProductsWithUsersProvider =
 typedef FetchProductsWithUsersRef =
     AutoDisposeFutureProviderRef<List<ProductWithUser>>;
 String _$fetchProductWithUserBySearchHash() =>
-    r'555746bb9ce8ed2ba6043563bb68e6081db1a88f';
+    r'e7438d54c0658b830a704628818f582d105f3505';
 
 /// Copied from Dart SDK
 class _SystemHash {

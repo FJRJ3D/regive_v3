@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:regive_v3/models/Product.dart';
 import 'package:regive_v3/models/UserDetails.dart';
+import 'package:regive_v3/providers/global_providers.dart';
 import 'package:regive_v3/repositories/product_repository.dart';
 import 'package:regive_v3/repositories/user_details_repository.dart';
 import 'package:regive_v3/view_models/ProductWithUser.dart';
@@ -23,8 +24,9 @@ class ProductService {
    return _formObjectProductWithUserByProductList(productList);
   }
 
-  Future<List<ProductWithUser>> fetchProductWithUserBySearch(Ref ref, String inputtedText) async {
-    final productList = await productRepository.fetchProductsBySearch(ref, inputtedText);
+  Future<List<ProductWithUser>> fetchProductWithUserBySearch(Ref ref) async {
+    final productList = await productRepository.fetchProductsBySearch(ref);
+    print("you have recieved objects: ${productList.length}");
     return _formObjectProductWithUserByProductList(productList);
   }
 
@@ -62,5 +64,5 @@ Future<List<ProductWithUser>> fetchProductsWithUsers(FetchProductsWithUsersRef r
 @riverpod
 Future<List<ProductWithUser>> fetchProductWithUserBySearch(FetchProductWithUserBySearchRef ref, String inputtedText) async {
   final service = ref.watch(productServiceProvider);
-  return service.fetchProductWithUserBySearch(ref, inputtedText);
+  return service.fetchProductWithUserBySearch(ref);
 }

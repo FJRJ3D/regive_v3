@@ -51,17 +51,34 @@ class ProductRepository {
     return product;
   }
 
-  Future<List<Product>> fetchProductsBySearch(Ref ref, String inputtedText) async {
+  Future<List<Product>> fetchProductsBySearch(Ref ref) async {
+    final inputtedText = ref.watch(inputtedTextToSearchProvider);
+    print("text what the user has inputted: $inputtedText");
+    if(inputtedText == null) {
+      throw Exception("You can't search without white anything into input");
+    }
+    print("repository recives text inputed: $inputtedText");
     final lastDocument = ref.read(lastProductSearchedDocProvider);
+    print("last document $lastDocument");
     final inputtedTextLowCase = inputtedText.toLowerCase();
-    final wordsSplit = inputtedTextLowCase.split(' ');
+    final wordsSplit = inputtedTextLowCase
+        .split(' ')
+        .map((word) => word.trim())
+        .where((word) => word.isNotEmpty)
+        .toList();
+    print("words splitted: $wordsSplit");
+    if (wordsSplit.isEmpty) {
+      print("No valid search terms");
+      throw Exception('Words are empty');
+    }
     Query<Map<String, dynamic>> query = firestore.collection('products').where('keywords', arrayContainsAny: wordsSplit).limit(5);
-
     if (lastDocument != null) {
       query = query.startAfterDocument(lastDocument);
     }
+    print("Query: ${query.toString()}");
 
     final productsSnapshot = await query.get();
+    print('you have recieved objects document: $productsSnapshot');
     final productList =
     productsSnapshot.docs
         .map((doc) => Product.formDocumentSnapshot(doc))
@@ -85,7 +102,7 @@ Future<Product> fetchProductById(
 }
 
 @riverpod
-Future<List<Product>> fetchProductsBySearch(FetchProductsBySearchRef ref,String inputtedText) async {
+Future<List<Product>> fetchProductsBySearch(FetchProductsBySearchRef ref) async {
   final repo = ref.watch(productRepositoryProvider);
-  return repo.fetchProductsBySearch(ref, inputtedText);
+  return repo.fetchProductsBySearch(ref);
 }
