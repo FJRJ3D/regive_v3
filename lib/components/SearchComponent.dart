@@ -19,9 +19,11 @@ class _SearchComponentState extends ConsumerState<SearchComponent> {
     if (query.isNotEmpty) {
       print('Search: $query');
       ref.read(inputtedTextToSearchProvider.notifier).state = query;
-      ref
-          .read(productSearchNotifierProvider.notifier)
-          .loadMoreSearchedProducts();
+      ref.read(lastProductSearchedDocProvider.notifier).state = null;
+      ref.read(selectedSubcategoryIdProvider.notifier).state =
+      null;
+      ref.read(selectedCategoryIdProvider.notifier).state =
+      null;
       GoRouter.of(context).push('/search');
     }
   }

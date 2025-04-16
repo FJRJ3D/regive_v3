@@ -12,6 +12,12 @@ class ProductSearchNotifier extends StateNotifier<List<ProductWithUser>> {
     print('Product search notifier initialized with empty state');
   }
 
+  void reset() {
+    state = [];
+    print('Product search state reset');
+  }
+
+
   Future<void> loadMoreSearchedProducts() async {
     if(_isLoading) {
       return;

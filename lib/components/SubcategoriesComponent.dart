@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:regive_v3/providers/global_providers.dart';
 import 'package:regive_v3/repositories/subcategory_repository.dart';
 import '../models/Subcategory.dart';
@@ -35,15 +36,26 @@ class SubcategoryComponent extends ConsumerWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                        categoryName,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () {
+                        ref.read(lastProductSearchedDocProvider.notifier).state = null;
+                        ref.read(inputtedTextToSearchProvider.notifier).state =
+                            null;
+                        ref.read(selectedSubcategoryIdProvider.notifier).state =
+                            null;
+                        ref.read(inputtedTextToSearchProvider.notifier).state = null;
+                        GoRouter.of(context).push('/search');
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          categoryName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                     LayoutBuilder(
@@ -69,9 +81,14 @@ class SubcategoryComponent extends ConsumerWidget {
                             final subcategory = subcategoriesList[index];
                             return InkWell(
                               onTap: () {
-                                print(
-                                  "Tapped on subcategory ${subcategory.name}",
-                                );
+                                ref.read(lastProductSearchedDocProvider.notifier).state = null;
+                                ref.read(inputtedTextToSearchProvider.notifier).state =
+                                null;
+                                ref.read(selectedCategoryIdProvider.notifier).state =
+                                null;
+                                ref.read(inputtedTextToSearchProvider.notifier).state = null;
+                                ref.read(selectedSubcategoryIdProvider.notifier).state = subcategory.id;
+                                GoRouter.of(context).push('/search');
                               },
                               child: Align(
                                 alignment: Alignment.centerLeft,

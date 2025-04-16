@@ -40,6 +40,11 @@ class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
 
                 return GestureDetector(
                   onTap: () {
+                    if(selectedCategoryId == category.id) {
+                      ref.watch(selectedCategoryIdProvider.notifier).state = selectedCategoryId = null;
+                    } else {
+                      ref.watch(selectedCategoryIdProvider.notifier).state = category.id;
+                    }
                     setState(() {
                       if (selectedCategoryId == category.id) {
                         selectedCategoryId = null;

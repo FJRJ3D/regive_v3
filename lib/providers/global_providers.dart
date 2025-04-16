@@ -32,3 +32,7 @@ final productSearchNotifierProvider = StateNotifierProvider<ProductSearchNotifie
       return ProductSearchNotifier(productService, ref);
     },
 );
+
+final selectedCategoryIdProvider = StateProvider<String?>((ref) => null);
+
+final selectedSubcategoryIdProvider = StateProvider<String?>((ref) => null);
