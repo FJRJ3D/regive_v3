@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:regive_v3/models/Product.dart';
 import 'package:regive_v3/providers/products_notifier.dart';
 import 'package:regive_v3/providers/products_search_notifier.dart';
 import 'package:regive_v3/services/product_service.dart';
@@ -34,3 +33,7 @@ final productSearchNotifierProvider = StateNotifierProvider<ProductSearchNotifie
 );
 
 final capturedImageProvider = StateProvider<XFile?>((ref) => null);
+
+final productNameProvider = StateProvider<String>((ref) => '');
+
+final productDescriptionProvider = StateProvider<String>((ref) => '');

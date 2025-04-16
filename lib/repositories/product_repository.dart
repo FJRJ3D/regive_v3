@@ -4,10 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:regive_v3/models/Product.dart';
 import 'package:regive_v3/providers/global_providers.dart';
-import 'package:regive_v3/view_models/ProductWithUser.dart';
+import 'package:regive_v3/repositories/compress_image.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'product_repository.g.dart';
@@ -23,42 +22,44 @@ class ProductRepository {
     QuerySnapshot<Map<String, dynamic>> productsSnapshot;
     if (lastProductDoc == null) {
       productsSnapshot =
-          await firestore
-              .collection('products')
-              .orderBy('publishedDate', descending: true)
-              .limit(5)
-              .get();
+      await firestore
+          .collection('products')
+          .orderBy('publishedDate', descending: true)
+          .limit(5)
+          .get();
     } else {
       productsSnapshot =
-          await firestore
-              .collection('products')
-              .orderBy('publishedDate', descending: true)
-              .startAfterDocument(lastProductDoc)
-              .limit(5)
-              .get();
+      await firestore
+          .collection('products')
+          .orderBy('publishedDate', descending: true)
+          .startAfterDocument(lastProductDoc)
+          .limit(5)
+          .get();
     }
     if (productsSnapshot.docs.isNotEmpty) {
-      ref.read(lastProductDocProvider.notifier).state =
+      ref
+          .read(lastProductDocProvider.notifier)
+          .state =
           productsSnapshot.docs.last;
       print('last document saved');
     }
     final productList =
-        productsSnapshot.docs
-            .map((doc) => Product.formDocumentSnapshot(doc))
-            .toList();
+    productsSnapshot.docs
+        .map((doc) => Product.formDocumentSnapshot(doc))
+        .toList();
     return productList;
   }
 
   Future<Product> fetchProductById(String productId) async {
     final productDocument =
-        await firestore.collection('products').doc(productId).get();
+    await firestore.collection('products').doc(productId).get();
     final product = Product.formDocumentSnapshot(productDocument);
     return product;
   }
 
   Future<List<Product>> fetchProductsBySearch(Ref ref) async {
     final inputtedText = ref.watch(inputtedTextToSearchProvider);
-    if(inputtedText == null) {
+    if (inputtedText == null) {
       throw Exception("You can't search without white anything into input");
     }
     final lastDocument = ref.read(lastProductSearchedDocProvider);
@@ -72,13 +73,16 @@ class ProductRepository {
       print("No valid search terms");
       throw Exception('Words are empty');
     }
-    Query<Map<String, dynamic>> query = firestore.collection('products').where('keywords', arrayContainsAny: wordsSplit).limit(5);
+    Query<Map<String, dynamic>> query = firestore.collection('products').where(
+        'keywords', arrayContainsAny: wordsSplit).limit(5);
     if (lastDocument != null) {
       query = query.startAfterDocument(lastDocument);
     }
 
     final productsSnapshot = await query.get();
-    ref.read(lastProductSearchedDocProvider.notifier).state = productsSnapshot.docs.last;
+    ref
+        .read(lastProductSearchedDocProvider.notifier)
+        .state = productsSnapshot.docs.last;
     final productList =
     productsSnapshot.docs
         .map((doc) => Product.formDocumentSnapshot(doc))
@@ -93,61 +97,70 @@ ProductRepository productRepository(ProductRepositoryRef ref) {
 }
 
 @riverpod
-Future<Product> fetchProductById(
-  FetchProductByIdRef ref,
-  String productId,
-) async {
+Future<Product> fetchProductById(FetchProductByIdRef ref,
+    String productId,) async {
   final repo = ref.watch(productRepositoryProvider);
   return repo.fetchProductById(productId);
 }
 
 @riverpod
-Future<List<Product>> fetchProductsBySearch(FetchProductsBySearchRef ref) async {
+Future<List<Product>> fetchProductsBySearch(
+    FetchProductsBySearchRef ref) async {
   final repo = ref.watch(productRepositoryProvider);
   return repo.fetchProductsBySearch(ref);
 }
 
 @riverpod
-Future<void> createProductWithCurrentUser(
-    Ref ref, {
-      required Product productRequest,
-    }) async {
+Future<Product> createProductWithCurrentUser(Ref ref) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) {
     throw Exception('No user is currently signed in');
   }
 
-  final ImagePicker picker = ImagePicker();
-  final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-  if (pickedFile == null) {
-    throw Exception('No image selected');
+  final capturedImage = ref.read(capturedImageProvider);
+  if (capturedImage == null) {
+    throw Exception('No image captured');
   }
+  final originalFile = File(capturedImage.path);
+  final compressedFile = await compressImage(originalFile);
 
-  final storageRef = FirebaseStorage.instance.ref().child('product_images/${pickedFile.name}');
-  final uploadTask = storageRef.putFile(File(pickedFile.path));
+  String name = ref.read(productNameProvider);
+  String description = ref.read(productDescriptionProvider);
 
-  final taskSnapshot = await uploadTask.whenComplete(() {});
+  final firestore = FirebaseFirestore.instance.collection('products').doc();
+  final generatedId = firestore.id;
 
-  final imageUrl = await taskSnapshot.ref.getDownloadURL();
+  final newProduct = Product(
+      id: generatedId,
+      name: name,
+      description: description,
+      publishedDate: Timestamp.now(),
+      imageUrl: await uploadImage(compressedFile, user),
+      userId: user.uid,
+      keywords: []);
 
-  final productRef = FirebaseFirestore.instance.collection('products').doc();
+  await firestore.set(newProduct.toMap());
 
-  await productRef.set({
-    'name': productRequest.name,
-    'description': productRequest.description,
-    'publishedDate': Timestamp.now(),
-    'imageUrl': imageUrl,
-    'userDetailsId': user.uid,
-  });
+  return newProduct;
+}
 
-  await productRef.update({
-    'id': productRef.id,
-  });
+Future<String> uploadImage (File image, User user) async {
+  final String namefile = image.path.split("/").last;
+
+  final Reference storageRef = FirebaseStorage.instance
+      .ref()
+      .child(user.uid)
+      .child("images")
+      .child(namefile);
+
+  final UploadTask uploadTask = storageRef.putFile(image);
+  final TaskSnapshot snapshot = await uploadTask.whenComplete(() => true);
+  final String url = await snapshot.ref.getDownloadURL();
+  return url;
 }
 
 @riverpod
-Future<List<Product>> getAllUserProducts(Ref ref) async {
+Stream<List<Product>> getAllUserProducts(Ref ref)  {
   final user = FirebaseAuth.instance.currentUser;
 
   if (user == null) {
@@ -156,20 +169,12 @@ Future<List<Product>> getAllUserProducts(Ref ref) async {
 
   final userId = user.uid;
 
-  try {
-    final querySnapshot =
-    await FirebaseFirestore.instance
-        .collection('products')
-        .where('userDetailsId', isEqualTo: userId)
-        .orderBy('publishedDate', descending: true)
-        .limit(10)
-        .get();
-
-    return querySnapshot.docs
-        .map((doc) => Product.formDocumentSnapshot(doc))
-        .toList();
-  } catch (e) {
-    print('Error fetching user products: $e');
-    return [];
-  }
+  return FirebaseFirestore.instance
+      .collection('products')
+      .where('userId', isEqualTo: userId)
+      .orderBy('publishedDate', descending: true)
+      .limit(10)
+      .snapshots()
+      .map((querySnapshot) =>
+      querySnapshot.docs.map(Product.formDocumentSnapshot).toList());
 }
