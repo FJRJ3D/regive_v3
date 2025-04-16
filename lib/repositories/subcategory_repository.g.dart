@@ -182,5 +182,131 @@ class _FetchSubcategoriesByCategoryIdProviderElement
       (origin as FetchSubcategoriesByCategoryIdProvider).categoryId;
 }
 
+String _$fetchSubcategoryByIdHash() =>
+    r'2f9d5481b92a922004c5edaec31b8e47be241dd9';
+
+/// See also [fetchSubcategoryById].
+@ProviderFor(fetchSubcategoryById)
+const fetchSubcategoryByIdProvider = FetchSubcategoryByIdFamily();
+
+/// See also [fetchSubcategoryById].
+class FetchSubcategoryByIdFamily extends Family<AsyncValue<Subcategory>> {
+  /// See also [fetchSubcategoryById].
+  const FetchSubcategoryByIdFamily();
+
+  /// See also [fetchSubcategoryById].
+  FetchSubcategoryByIdProvider call(String subcategoryId) {
+    return FetchSubcategoryByIdProvider(subcategoryId);
+  }
+
+  @override
+  FetchSubcategoryByIdProvider getProviderOverride(
+    covariant FetchSubcategoryByIdProvider provider,
+  ) {
+    return call(provider.subcategoryId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'fetchSubcategoryByIdProvider';
+}
+
+/// See also [fetchSubcategoryById].
+class FetchSubcategoryByIdProvider
+    extends AutoDisposeFutureProvider<Subcategory> {
+  /// See also [fetchSubcategoryById].
+  FetchSubcategoryByIdProvider(String subcategoryId)
+    : this._internal(
+        (ref) =>
+            fetchSubcategoryById(ref as FetchSubcategoryByIdRef, subcategoryId),
+        from: fetchSubcategoryByIdProvider,
+        name: r'fetchSubcategoryByIdProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$fetchSubcategoryByIdHash,
+        dependencies: FetchSubcategoryByIdFamily._dependencies,
+        allTransitiveDependencies:
+            FetchSubcategoryByIdFamily._allTransitiveDependencies,
+        subcategoryId: subcategoryId,
+      );
+
+  FetchSubcategoryByIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.subcategoryId,
+  }) : super.internal();
+
+  final String subcategoryId;
+
+  @override
+  Override overrideWith(
+    FutureOr<Subcategory> Function(FetchSubcategoryByIdRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchSubcategoryByIdProvider._internal(
+        (ref) => create(ref as FetchSubcategoryByIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        subcategoryId: subcategoryId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Subcategory> createElement() {
+    return _FetchSubcategoryByIdProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FetchSubcategoryByIdProvider &&
+        other.subcategoryId == subcategoryId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, subcategoryId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin FetchSubcategoryByIdRef on AutoDisposeFutureProviderRef<Subcategory> {
+  /// The parameter `subcategoryId` of this provider.
+  String get subcategoryId;
+}
+
+class _FetchSubcategoryByIdProviderElement
+    extends AutoDisposeFutureProviderElement<Subcategory>
+    with FetchSubcategoryByIdRef {
+  _FetchSubcategoryByIdProviderElement(super.provider);
+
+  @override
+  String get subcategoryId =>
+      (origin as FetchSubcategoryByIdProvider).subcategoryId;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
