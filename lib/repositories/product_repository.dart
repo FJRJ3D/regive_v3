@@ -148,6 +148,12 @@ Future<Product> createProductWithCurrentUser(Ref ref) async {
 
   String name = ref.read(productNameProvider);
   String description = ref.read(productDescriptionProvider);
+  List<dynamic> keywords = extractKeywords(name);
+
+  final selectedCategory = ref.read(selectedCategoryProvider);
+  final selectedSubcategory = ref.read(selectedSubcategoryProvider);
+  final categorySubcategoryIds = await getCategoryAndSubcategoryIds(
+      selectedCategory, selectedSubcategory);
 
   final firestore = FirebaseFirestore.instance.collection('products').doc();
   final generatedId = firestore.id;
@@ -159,13 +165,45 @@ Future<Product> createProductWithCurrentUser(Ref ref) async {
       publishedDate: Timestamp.now(),
       imageUrl: await uploadImage(compressedFile, user),
       userId: user.uid,
-      categoryId: "",
-      subcategoryId: "",
-      keywords: []);
+      categoryId: categorySubcategoryIds['categoryId']!,
+      subcategoryId: categorySubcategoryIds['subcategoryId']!,
+      keywords: keywords);
 
   await firestore.set(newProduct.toMap());
 
   return newProduct;
+}
+
+Future<Map<String, String>> getCategoryAndSubcategoryIds(
+    String? selectedCategory, String? selectedSubcategory) async {
+  final categorySnapshot = await FirebaseFirestore.instance
+      .collection('categories')
+      .where('name', isEqualTo: selectedCategory)
+      .limit(1)
+      .get();
+
+  if (categorySnapshot.docs.isEmpty) {
+    throw Exception('Category not found');
+  }
+
+  final categoryId = categorySnapshot.docs.first.id;
+
+  final subcategorySnapshot = await FirebaseFirestore.instance
+      .collection('subcategories')
+      .where('name', isEqualTo: selectedSubcategory)
+      .limit(1)
+      .get();
+
+  if (subcategorySnapshot.docs.isEmpty) {
+    throw Exception('Subcategory not found');
+  }
+
+  final subcategoryId = subcategorySnapshot.docs.first.id;
+
+  return {
+    'categoryId': categoryId,
+    'subcategoryId': subcategoryId,
+  };
 }
 
 Future<String> uploadImage (File image, User user) async {
@@ -181,6 +219,13 @@ Future<String> uploadImage (File image, User user) async {
   final TaskSnapshot snapshot = await uploadTask.whenComplete(() => true);
   final String url = await snapshot.ref.getDownloadURL();
   return url;
+}
+
+List<dynamic> extractKeywords(String input) {
+  return input
+      .split(' ')
+      .map((word) => word.toLowerCase())
+      .toList();
 }
 
 @riverpod
