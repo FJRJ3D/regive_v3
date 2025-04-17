@@ -47,7 +47,7 @@ final fetchAllCategoriesProvider =
 // ignore: unused_element
 typedef FetchAllCategoriesRef =
     AutoDisposeFutureProviderRef<List<ProductCategory>>;
-String _$fetchCategoryByIdHash() => r'885a76085f0863599dc30e198316266bf977a1fe';
+String _$fetchCategoryByIdHash() => r'18873f3fd1491c1c6497240d32fc401a86f5ac8b';
 
 /// Copied from Dart SDK
 class _SystemHash {

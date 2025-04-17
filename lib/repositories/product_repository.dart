@@ -106,6 +106,14 @@ class ProductRepository {
     print(productList.map((product) => product.categoryId));
     return productList;
   }
+
+  Future<List<Product>> fetchProductsByIdsList(List<String> ids) async {
+    final List<Future<DocumentSnapshot<Map<String, dynamic>>>> futures = ids.map((id) => firestore.collection('products').doc(id).get()).toList();
+    final List<DocumentSnapshot<Map<String, dynamic>>> snapshots = await Future.wait(futures);
+
+    final List<Product> products = snapshots.where((doc) => doc.exists).map((productDoc) => Product.formDocumentSnapshot(productDoc)).toList();
+    return products;
+  }
 }
 
 @riverpod
@@ -126,4 +134,10 @@ Future<Product> fetchProductById(
 Future<List<Product>> fetchProductsBySearch(FetchProductsBySearchRef ref) async {
   final repo = ref.watch(productRepositoryProvider);
   return repo.fetchProductsBySearch(ref);
+}
+
+@riverpod
+Future<List<Product>> fetchProductsByIdsList(FetchProductsByIdsListRef ref, List<String> ids) async {
+  final repo = ref.watch(productRepositoryProvider);
+  return repo.fetchProductsByIdsList(ids);
 }

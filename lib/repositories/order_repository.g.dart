@@ -190,5 +190,130 @@ class _CreateAnOrderProviderElement
   String get reason => (origin as CreateAnOrderProvider).reason;
 }
 
+String _$fetchOrdersByUserIdHash() =>
+    r'ee134bf204c685943a9de23ca1bf89a619783359';
+
+/// See also [fetchOrdersByUserId].
+@ProviderFor(fetchOrdersByUserId)
+const fetchOrdersByUserIdProvider = FetchOrdersByUserIdFamily();
+
+/// See also [fetchOrdersByUserId].
+class FetchOrdersByUserIdFamily extends Family<AsyncValue<List<ProductOrder>>> {
+  /// See also [fetchOrdersByUserId].
+  const FetchOrdersByUserIdFamily();
+
+  /// See also [fetchOrdersByUserId].
+  FetchOrdersByUserIdProvider call(String userId) {
+    return FetchOrdersByUserIdProvider(userId);
+  }
+
+  @override
+  FetchOrdersByUserIdProvider getProviderOverride(
+    covariant FetchOrdersByUserIdProvider provider,
+  ) {
+    return call(provider.userId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'fetchOrdersByUserIdProvider';
+}
+
+/// See also [fetchOrdersByUserId].
+class FetchOrdersByUserIdProvider
+    extends AutoDisposeFutureProvider<List<ProductOrder>> {
+  /// See also [fetchOrdersByUserId].
+  FetchOrdersByUserIdProvider(String userId)
+    : this._internal(
+        (ref) => fetchOrdersByUserId(ref as FetchOrdersByUserIdRef, userId),
+        from: fetchOrdersByUserIdProvider,
+        name: r'fetchOrdersByUserIdProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$fetchOrdersByUserIdHash,
+        dependencies: FetchOrdersByUserIdFamily._dependencies,
+        allTransitiveDependencies:
+            FetchOrdersByUserIdFamily._allTransitiveDependencies,
+        userId: userId,
+      );
+
+  FetchOrdersByUserIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.userId,
+  }) : super.internal();
+
+  final String userId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<ProductOrder>> Function(FetchOrdersByUserIdRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchOrdersByUserIdProvider._internal(
+        (ref) => create(ref as FetchOrdersByUserIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        userId: userId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<ProductOrder>> createElement() {
+    return _FetchOrdersByUserIdProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FetchOrdersByUserIdProvider && other.userId == userId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, userId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin FetchOrdersByUserIdRef
+    on AutoDisposeFutureProviderRef<List<ProductOrder>> {
+  /// The parameter `userId` of this provider.
+  String get userId;
+}
+
+class _FetchOrdersByUserIdProviderElement
+    extends AutoDisposeFutureProviderElement<List<ProductOrder>>
+    with FetchOrdersByUserIdRef {
+  _FetchOrdersByUserIdProviderElement(super.provider);
+
+  @override
+  String get userId => (origin as FetchOrdersByUserIdProvider).userId;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -24,6 +24,8 @@ final productsNotifierProvider = StateNotifierProvider<ProductsNotifier, List<Pr
 
 final lastProductSearchedDocProvider = StateProvider<DocumentSnapshot?>((ref) => null);
 
+final lastOrderDocProvider = StateProvider<DocumentSnapshot?>((ref) => null);
+
 final inputtedTextToSearchProvider = StateProvider<String?>((ref) => null);
 
 final productSearchNotifierProvider = StateNotifierProvider<ProductSearchNotifier, List<ProductWithUser>>(

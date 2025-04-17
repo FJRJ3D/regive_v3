@@ -187,5 +187,128 @@ final fetchProductsBySearchProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FetchProductsBySearchRef = AutoDisposeFutureProviderRef<List<Product>>;
+String _$fetchProductsByIdsListHash() =>
+    r'e3072c9851c02a0d58d2429ee54470142ff6c55c';
+
+/// See also [fetchProductsByIdsList].
+@ProviderFor(fetchProductsByIdsList)
+const fetchProductsByIdsListProvider = FetchProductsByIdsListFamily();
+
+/// See also [fetchProductsByIdsList].
+class FetchProductsByIdsListFamily extends Family<AsyncValue<List<Product>>> {
+  /// See also [fetchProductsByIdsList].
+  const FetchProductsByIdsListFamily();
+
+  /// See also [fetchProductsByIdsList].
+  FetchProductsByIdsListProvider call(List<String> ids) {
+    return FetchProductsByIdsListProvider(ids);
+  }
+
+  @override
+  FetchProductsByIdsListProvider getProviderOverride(
+    covariant FetchProductsByIdsListProvider provider,
+  ) {
+    return call(provider.ids);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'fetchProductsByIdsListProvider';
+}
+
+/// See also [fetchProductsByIdsList].
+class FetchProductsByIdsListProvider
+    extends AutoDisposeFutureProvider<List<Product>> {
+  /// See also [fetchProductsByIdsList].
+  FetchProductsByIdsListProvider(List<String> ids)
+    : this._internal(
+        (ref) => fetchProductsByIdsList(ref as FetchProductsByIdsListRef, ids),
+        from: fetchProductsByIdsListProvider,
+        name: r'fetchProductsByIdsListProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$fetchProductsByIdsListHash,
+        dependencies: FetchProductsByIdsListFamily._dependencies,
+        allTransitiveDependencies:
+            FetchProductsByIdsListFamily._allTransitiveDependencies,
+        ids: ids,
+      );
+
+  FetchProductsByIdsListProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.ids,
+  }) : super.internal();
+
+  final List<String> ids;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Product>> Function(FetchProductsByIdsListRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchProductsByIdsListProvider._internal(
+        (ref) => create(ref as FetchProductsByIdsListRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        ids: ids,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Product>> createElement() {
+    return _FetchProductsByIdsListProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FetchProductsByIdsListProvider && other.ids == ids;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, ids.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin FetchProductsByIdsListRef on AutoDisposeFutureProviderRef<List<Product>> {
+  /// The parameter `ids` of this provider.
+  List<String> get ids;
+}
+
+class _FetchProductsByIdsListProviderElement
+    extends AutoDisposeFutureProviderElement<List<Product>>
+    with FetchProductsByIdsListRef {
+  _FetchProductsByIdsListProviderElement(super.provider);
+
+  @override
+  List<String> get ids => (origin as FetchProductsByIdsListProvider).ids;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
