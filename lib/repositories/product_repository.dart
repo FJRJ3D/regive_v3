@@ -59,34 +59,55 @@ class ProductRepository {
 
   Future<List<Product>> fetchProductsBySearch(Ref ref) async {
     final inputtedText = ref.watch(inputtedTextToSearchProvider);
-    if (inputtedText == null) {
-      throw Exception("You can't search without white anything into input");
-    }
+    final categoryId = ref.watch(selectedCategoryIdProvider);
+    print("categoryId: $categoryId");
+    final subcategoryId = ref.watch(selectedSubcategoryIdProvider);
+    print("subcategoryId: $subcategoryId");
     final lastDocument = ref.read(lastProductSearchedDocProvider);
-    final inputtedTextLowCase = inputtedText.toLowerCase();
-    final wordsSplit = inputtedTextLowCase
-        .split(' ')
-        .map((word) => word.trim())
-        .where((word) => word.isNotEmpty)
-        .toList();
-    if (wordsSplit.isEmpty) {
-      print("No valid search terms");
-      throw Exception('Words are empty');
+    print("last document: $lastDocument");
+    if(inputtedText == null && categoryId == null && subcategoryId == null) {
+      throw Exception('everything is null');
     }
-    Query<Map<String, dynamic>> query = firestore.collection('products').where(
-        'keywords', arrayContainsAny: wordsSplit).limit(5);
+    final wordsSplit;
+    Query<Map<String, dynamic>> query = firestore.collection('products').limit(
+        5);
+    if (inputtedText != null) {
+      final inputtedTextLowCase = inputtedText.toLowerCase();
+      wordsSplit = inputtedTextLowCase
+          .split(' ')
+          .map((word) => word.trim())
+          .where((word) => word.isNotEmpty)
+          .toList();
+      if (wordsSplit.isNotEmpty) {
+        query = query.where('keywords', arrayContainsAny: wordsSplit);
+        print("add inputted text");
+      }
+    }
     if (lastDocument != null) {
-      query = query.startAfterDocument(lastDocument);
+      query = query = query.startAfterDocument(lastDocument);
+      print("add lass document");
+    }
+    if (categoryId != null) {
+      query = query.where('categoryId', isEqualTo: categoryId);
+      print("add category id");
+    }
+    if (subcategoryId != null) {
+      query = query.where('subcategoryId', isEqualTo: subcategoryId);
+      print("add subcategory id");
+    }
+    final productsSnapshot = await query.limit(5).get();
+    if (productsSnapshot.docs.isNotEmpty) {
+      ref
+          .read(lastProductSearchedDocProvider.notifier)
+          .state =
+          productsSnapshot.docs.last;
     }
 
-    final productsSnapshot = await query.get();
-    ref
-        .read(lastProductSearchedDocProvider.notifier)
-        .state = productsSnapshot.docs.last;
-    final productList =
-    productsSnapshot.docs
+    final productList = productsSnapshot.docs
         .map((doc) => Product.formDocumentSnapshot(doc))
         .toList();
+    print(productList.map((product) => product.name));
+    print(productList.map((product) => product.categoryId));
     return productList;
   }
 }
@@ -97,15 +118,16 @@ ProductRepository productRepository(ProductRepositoryRef ref) {
 }
 
 @riverpod
-Future<Product> fetchProductById(FetchProductByIdRef ref,
-    String productId,) async {
+Future<Product> fetchProductById(
+    FetchProductByIdRef ref,
+    String productId,
+    ) async {
   final repo = ref.watch(productRepositoryProvider);
   return repo.fetchProductById(productId);
 }
 
 @riverpod
-Future<List<Product>> fetchProductsBySearch(
-    FetchProductsBySearchRef ref) async {
+Future<List<Product>> fetchProductsBySearch(FetchProductsBySearchRef ref) async {
   final repo = ref.watch(productRepositoryProvider);
   return repo.fetchProductsBySearch(ref);
 }
@@ -137,6 +159,8 @@ Future<Product> createProductWithCurrentUser(Ref ref) async {
       publishedDate: Timestamp.now(),
       imageUrl: await uploadImage(compressedFile, user),
       userId: user.uid,
+      categoryId: "",
+      subcategoryId: "",
       keywords: []);
 
   await firestore.set(newProduct.toMap());

@@ -15,6 +15,11 @@ class SubcategoryRepository {
       final subcategoryList = subcategoriesSnapshot.docs.map((doc) => Subcategory.fromDocumentSnapshot(doc)).toList();
       return subcategoryList;
   }
+
+  Future<Subcategory> fetchSubcategoryById(String subcategoryId) async {
+    final subcategoryDoc = await firestore.collection('subcategories').doc(subcategoryId).get();
+    return Subcategory.fromDocumentSnapshot(subcategoryDoc);
+  }
 }
 
 @riverpod
@@ -26,4 +31,10 @@ SubcategoryRepository subcategoryRepository(SubcategoryRepositoryRef ref) {
 Future<List<Subcategory>> fetchSubcategoriesByCategoryId(FetchSubcategoriesByCategoryIdRef ref, String categoryId) async {
   final repo = ref.watch(subcategoryRepositoryProvider);
   return repo.fetchSubcategoriesByCategoryId(categoryId);
+}
+
+@riverpod
+Future<Subcategory> fetchSubcategoryById(FetchSubcategoryByIdRef ref, String subcategoryId) {
+  final repo = ref.watch(subcategoryRepositoryProvider);
+  return repo.fetchSubcategoryById(subcategoryId);
 }

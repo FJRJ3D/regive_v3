@@ -16,32 +16,49 @@ class _SearchComponentState extends ConsumerState<SearchComponent> {
 
   void _startSearch() {
     final query = _controller.text.trim();
-    if(query.isNotEmpty) {
+    if (query.isNotEmpty) {
       print('Search: $query');
       ref.read(inputtedTextToSearchProvider.notifier).state = query;
-      ref.read(productSearchNotifierProvider.notifier).loadMoreSearchedProducts();
+      ref.read(lastProductSearchedDocProvider.notifier).state = null;
+      ref.read(selectedSubcategoryIdProvider.notifier).state =
+      null;
+      ref.read(selectedCategoryIdProvider.notifier).state =
+      null;
       GoRouter.of(context).push('/search');
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.grey),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
             child: TextField(
               controller: _controller,
               decoration: const InputDecoration(
                 hintText: 'Search...',
-                border: OutlineInputBorder(),
+                border: InputBorder.none,
               ),
               onSubmitted: (_) => _startSearch(),
             ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: _startSearch,
-        ),
-      ],
+          ),
+          IconButton(icon: const Icon(Icons.search), onPressed: _startSearch),
+        ],
+      ),
     );
   }
 }

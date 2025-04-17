@@ -7,6 +7,8 @@ class Product {
   final Timestamp publishedDate;
   final String imageUrl;
   final String userId;
+  final String categoryId;
+  final String subcategoryId;
   final List<dynamic> keywords;
 
   Product({
@@ -16,6 +18,8 @@ class Product {
     required this.publishedDate,
     required this.imageUrl,
     required this.userId,
+    required this.categoryId,
+    required this.subcategoryId,
     required this.keywords,
 });
 
@@ -27,6 +31,8 @@ class Product {
       'publishedDate': publishedDate,
       'imageUrl': imageUrl,
       'userId': userId,
+      'categoryId': categoryId,
+      'subcategoryId': subcategoryId,
       'keywords': keywords,
     };
   }
@@ -41,6 +47,8 @@ class Product {
       publishedDate: data['publishedDate'] ?? Timestamp.now(),
       imageUrl: data['imageUrl'] ?? '',
       userId: data['userId'] ?? '',
+      categoryId: data['categoryId'] ?? '',
+      subcategoryId: data['subcategoryId'] ?? '',
       keywords: data['keywords'] ?? [],
     );
   }

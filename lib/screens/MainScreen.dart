@@ -45,7 +45,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           controller: _scrollController,
           slivers: [
             SliverToBoxAdapter(
+              child: Padding (
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               child: SearchComponent(),
+      ),
             ),
             SliverToBoxAdapter(
               child: CategoriesComponent(),

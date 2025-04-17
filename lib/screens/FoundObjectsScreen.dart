@@ -22,6 +22,7 @@ class _MainScreenState extends ConsumerState<FoundObjectsScreen> {
     _scrollController.addListener(_onScroll);
   }
 
+
   void _onScroll() {
     if(_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
       ref.read(productSearchNotifierProvider.notifier).loadMoreSearchedProducts();
@@ -37,6 +38,22 @@ class _MainScreenState extends ConsumerState<FoundObjectsScreen> {
   @override
   Widget build(BuildContext context) {
     final productsWithUsers = ref.watch(productSearchNotifierProvider);
+    // return Consumer(
+    //     builder: (context, ref, _) {
+    //       final productsWithUsers = ref.watch(productSearchNotifierProvider);
+
+          // ref.listen(inputtedTextToSearchProvider, (_, __) {
+          //   ref.read(lastProductSearchedDocProvider.notifier).state = null;
+          //   ref.read(productSearchNotifierProvider.notifier).reset();
+          //   ref.read(productSearchNotifierProvider.notifier).loadMoreSearchedProducts();
+          // });
+          //
+          //
+          // ref.listen(selectedCategoryIdProvider, (_, __) {
+          //   ref.read(lastProductSearchedDocProvider.notifier).state = null;
+          //   ref.read(productSearchNotifierProvider.notifier).reset();
+          //   ref.read(productSearchNotifierProvider.notifier).loadMoreSearchedProducts();
+          // });
 
     return Scaffold(
       backgroundColor: Color(0xFFF3E4CF),
@@ -45,7 +62,10 @@ class _MainScreenState extends ConsumerState<FoundObjectsScreen> {
           controller: _scrollController,
           slivers: [
             SliverToBoxAdapter(
-              child: SearchComponent(),
+              child: Padding (
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                child: SearchComponent(),
+              ),
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -60,5 +80,6 @@ class _MainScreenState extends ConsumerState<FoundObjectsScreen> {
         ),
       ),
     );
+        // });
   }
 }
