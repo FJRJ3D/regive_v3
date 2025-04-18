@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:regive_v3/models/Product.dart';
+import 'package:regive_v3/providers/global_providers.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends ConsumerWidget {
   final Product product;
 
   const ProductCard({Key? key, required this.product}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         splashColor: Colors.blue.withAlpha(100),
         onTap: () {
-          print("boton presionado");
+          ref.read(activeProductOwnerProvider.notifier).state = product.userId;
+          ref.read(selectedProductProvider.notifier).state = product.id;
+          GoRouter.of(context).push('/product-details');
         },
         child: Padding(
           padding: const EdgeInsets.only(bottom: 10),

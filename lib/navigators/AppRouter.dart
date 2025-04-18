@@ -10,7 +10,7 @@ class AppNavigator {
 
   AppNavigator._internal() {
     _router = GoRouter(
-      initialLocation: '/main',
+      initialLocation: '/',
       routes: [
         GoRoute(
           path: '/',
