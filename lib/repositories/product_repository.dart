@@ -150,10 +150,8 @@ Future<Product> createProductWithCurrentUser(Ref ref) async {
   String description = ref.read(productDescriptionProvider);
   List<dynamic> keywords = extractKeywords(name);
 
-  final selectedCategory = ref.read(selectedCategoryProvider);
-  final selectedSubcategory = ref.read(selectedSubcategoryProvider);
-  final categorySubcategoryIds = await getCategoryAndSubcategoryIds(
-      selectedCategory, selectedSubcategory);
+  String? categoryId = ref.read(selectedCategoryIdProvider);
+  String? subcategoryId = ref.read(selectedSubcategoryIdProvider);
 
   final firestore = FirebaseFirestore.instance.collection('products').doc();
   final generatedId = firestore.id;
@@ -165,45 +163,13 @@ Future<Product> createProductWithCurrentUser(Ref ref) async {
       publishedDate: Timestamp.now(),
       imageUrl: await uploadImage(compressedFile, user),
       userId: user.uid,
-      categoryId: categorySubcategoryIds['categoryId']!,
-      subcategoryId: categorySubcategoryIds['subcategoryId']!,
+      categoryId: categoryId!,
+      subcategoryId: subcategoryId!,
       keywords: keywords);
 
   await firestore.set(newProduct.toMap());
 
   return newProduct;
-}
-
-Future<Map<String, String>> getCategoryAndSubcategoryIds(
-    String? selectedCategory, String? selectedSubcategory) async {
-  final categorySnapshot = await FirebaseFirestore.instance
-      .collection('categories')
-      .where('name', isEqualTo: selectedCategory)
-      .limit(1)
-      .get();
-
-  if (categorySnapshot.docs.isEmpty) {
-    throw Exception('Category not found');
-  }
-
-  final categoryId = categorySnapshot.docs.first.id;
-
-  final subcategorySnapshot = await FirebaseFirestore.instance
-      .collection('subcategories')
-      .where('name', isEqualTo: selectedSubcategory)
-      .limit(1)
-      .get();
-
-  if (subcategorySnapshot.docs.isEmpty) {
-    throw Exception('Subcategory not found');
-  }
-
-  final subcategoryId = subcategorySnapshot.docs.first.id;
-
-  return {
-    'categoryId': categoryId,
-    'subcategoryId': subcategoryId,
-  };
 }
 
 Future<String> uploadImage (File image, User user) async {

@@ -5,20 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:regive_v3/components/CustomElevatedButton.dart';
 import 'package:regive_v3/providers/global_providers.dart';
+import 'package:regive_v3/repositories/category_repository.dart';
 import 'package:regive_v3/repositories/product_repository.dart';
 import 'package:regive_v3/repositories/select_image.dart';
+import 'package:regive_v3/repositories/subcategory_repository.dart';
 
 void CustomShowModalBottomSheet(BuildContext context, WidgetRef ref) {
-  final List<String> categories = ['Books', 'Electronics', 'Animals', 'Decor', 'Hobby', 'Peoples help'];
-
-  final Map<String, List<String>> categoryMap = {
-    'Books': ['visual novel', 'Non‑fiction', 'manga', 'web novel', 'Adventure', 'Comics',],
-    'Electronics': ['Smartphones', 'Laptops', 'Headphones', 'Tablets', 'Smartwatches',],
-    'Animals': ['Pets', 'Wildlife', 'Marine Life', 'Birds', 'Reptiles',],
-    'Decor': ['Furniture', 'Wall Art', 'Lighting', 'Rugs', 'Candles',],
-    'Hobby': ['Photography', 'Fishing', 'Gardening', 'Painting', 'Collecting',],
-    'Peoples help': ['Charity', 'Support Groups', 'Volunteering', 'Donations', 'Community Services',],
-  };
 
   showModalBottomSheet(
     context: context,
@@ -154,84 +146,75 @@ void CustomShowModalBottomSheet(BuildContext context, WidgetRef ref) {
                     ),
                     const SizedBox(height: 10),
                     Consumer(
-                      builder: (context, ref, _) {
-                        final selectedCategory = ref.watch(selectedCategoryProvider);
-                        return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white.withAlpha(50),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide.none,
+                      builder: (context, ref, child) {
+                        return  ref.watch(fetchAllCategoriesProvider).when(
+                          data: (categories) => DropdownButtonFormField<String>(
+                            value: ref.watch(selectedCategoryIdProvider),
+                            onChanged: (value) {
+                              ref.read(selectedCategoryIdProvider.notifier).state = value;
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Select Category',
+                              labelStyle: const TextStyle(color: Colors.white),
+                              filled: true,
+                              fillColor: Colors.white.withAlpha(50),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
-                          ),
-                          dropdownColor: Colors.black.withAlpha(200),
-                          isExpanded: true,
-                          isDense: true,
-                          value: selectedCategory,
-                          hint: const Text("Select a category", style: TextStyle(color: Colors.white)),
-                          iconEnabledColor: Colors.white,
-                          items: categories.map((category) {
-                            return DropdownMenuItem(
-                              value: category,
-                              child: Text(category, style: const TextStyle(color: Colors.white)),
-                            );
-                          }).toList(),
-                          selectedItemBuilder: (context) {
-                            return categories.map((category) {
-                              return Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(category, style: const TextStyle(color: Colors.white)),
+                            dropdownColor: Colors.grey[900],
+                            style: const TextStyle(color: Colors.white),
+                            iconEnabledColor: Colors.white,
+                            items: categories.map((category) {
+                              return DropdownMenuItem<String>(
+                                value: category.id,
+                                child: Text(category.name),
                               );
-                            }).toList();
-                          },
-                          onChanged: (newVal) {
-                            ref.read(selectedCategoryProvider.notifier).state = newVal;
-                            ref.read(selectedSubcategoryProvider.notifier).state = null;
-                          },
+                            }).toList(),
+                          ),
+                          loading: () => const CircularProgressIndicator(),
+                          error: (error, stack) => Text('Error: $error'),
                         );
                       },
                     ),
                     const SizedBox(height: 10),
                     Consumer(
                       builder: (context, ref, _) {
-                        final selectedCategory = ref.watch(selectedCategoryProvider);
-                        final selectedSub = ref.watch(selectedSubcategoryProvider);
-                        final subList = selectedCategory != null
-                            ? categoryMap[selectedCategory] ?? []
-                            : <String>[];
-                        return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white.withAlpha(50),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide.none,
+                        final selectedCategoryId = ref.watch(selectedCategoryIdProvider);
+                        if (selectedCategoryId == null) {
+                          return const SizedBox();
+                        }
+                        final subsAsync = ref.watch(fetchSubcategoriesByCategoryIdProvider(selectedCategoryId));
+                        final selectedSubId = ref.watch(selectedSubcategoryIdProvider);
+                        return subsAsync.when(
+                          data: (subs) => DropdownButtonFormField<String>(
+                            value: selectedSubId,
+                            onChanged: (value) {
+                              ref.read(selectedSubcategoryIdProvider.notifier).state = value;
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Select Subcategory',
+                              labelStyle: const TextStyle(color: Colors.white),
+                              filled: true,
+                              fillColor: Colors.white.withAlpha(50),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
-                          ),
-                          dropdownColor: Colors.black.withAlpha(200),
-                          isExpanded: true,
-                          isDense: true,
-                          value: selectedSub,
-                          hint: const Text("Select a subcategory", style: TextStyle(color: Colors.white)),
-                          iconEnabledColor: Colors.white,
-                          items: subList.map((sub) {
-                            return DropdownMenuItem(
-                              value: sub,
-                              child: Text(sub, style: const TextStyle(color: Colors.white)),
-                            );
-                          }).toList(),
-                          selectedItemBuilder: (context) {
-                            return subList.map((sub) {
-                              return Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(sub, style: const TextStyle(color: Colors.white)),
+                            dropdownColor: Colors.grey[900],
+                            style: const TextStyle(color: Colors.white),
+                            iconEnabledColor: Colors.white,
+                            items: subs.map((sub) {
+                              return DropdownMenuItem<String>(
+                                value: sub.id,
+                                child: Text(sub.name),
                               );
-                            }).toList();
-                          },
-                          onChanged: (newVal) {
-                            ref.read(selectedSubcategoryProvider.notifier).state = newVal;
-                          },
+                            }).toList(),
+                          ),
+                          loading: () => const CircularProgressIndicator(),
+                          error: (e, _) => Text('Error: $e'),
                         );
                       },
                     ),
@@ -239,10 +222,10 @@ void CustomShowModalBottomSheet(BuildContext context, WidgetRef ref) {
                     CustomElevatedButton(
                       text: 'Submit',
                       onPressed: () async {
-                        await ref.read(
-                          createProductWithCurrentUserProvider.future,
-                        );
+                        await ref.read(createProductWithCurrentUserProvider.future,);
                         ref.read(capturedImageProvider.notifier).state = null;
+                        ref.read(selectedCategoryIdProvider.notifier).state = null;
+                        ref.read(selectedSubcategoryIdProvider.notifier).state = null;
                         Navigator.pop(context);
                       },
                       backgroundColor: Colors.grey,

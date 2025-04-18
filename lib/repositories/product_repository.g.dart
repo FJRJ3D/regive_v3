@@ -188,7 +188,7 @@ final fetchProductsBySearchProvider =
 // ignore: unused_element
 typedef FetchProductsBySearchRef = AutoDisposeFutureProviderRef<List<Product>>;
 String _$createProductWithCurrentUserHash() =>
-    r'09d1f04df3f99da216c141d33181654294b3da61';
+    r'f2ccc779ca83bfcdde21995f8439878c8d194211';
 
 /// See also [createProductWithCurrentUser].
 @ProviderFor(createProductWithCurrentUser)
