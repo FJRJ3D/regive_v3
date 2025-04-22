@@ -213,3 +213,36 @@ Stream<List<Product>> getAllUserProducts(Ref ref)  {
       .map((querySnapshot) =>
       querySnapshot.docs.map(Product.formDocumentSnapshot).toList());
 }
+
+@riverpod
+Future<void> deleteProduct(Ref ref) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('No user is currently signed in');
+    }
+
+    final productDoc = await FirebaseFirestore.instance.collection('products').doc(ref.read(selectedProductProvider)).get();
+
+    if (!productDoc.exists) {
+      throw Exception('The product does not exist');
+    }
+
+    final productData = productDoc.data();
+    final productUserId = productData?['userId'];
+
+    if (productUserId != user.uid) {
+      throw Exception('You do not have permission to delete this product');
+    }
+
+    final imageUrl = productData?['imageUrl'];
+    if (imageUrl != null) {
+      final storageRef = FirebaseStorage.instance.refFromURL(imageUrl);
+      await storageRef.delete();
+    }
+
+    await productDoc.reference.delete();
+  } catch (e) {
+    throw Exception('Could not delete the product');
+  }
+}

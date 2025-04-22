@@ -13,6 +13,7 @@ class ProductComponent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final showOwnerAndOrder = ref.read(showOwnerAndOrderProvider);
     final productId = ref.watch(selectedProductProvider);
     if (productId == null) {
       return const Center(child: Text('Product is not selected'));
@@ -151,6 +152,85 @@ class ProductComponent extends ConsumerWidget {
                             ),
                         ),
                         const SizedBox(height: 10),
+                        if (!showOwnerAndOrder) ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit, size: 30,),
+                                color: Color(0xFF8D8D8D),
+                                onPressed: () {
+                                  print("Edit button pressed");
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete, size: 30),
+                                color: Color(0xFF8D8D8D),
+                                onPressed: () async {
+                                  final confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Confirm Deletion'),
+                                      content: const Text(
+                                        'Are you sure you want to delete this product? This action cannot be undone.',
+                                      ),
+                                      contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 10.0),
+                                      actionsPadding: const EdgeInsets.only(bottom: 16),
+                                      actions: [
+                                        Center(
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              ElevatedButton(
+                                                onPressed: () => Navigator.of(context).pop(false),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: const Color(0xFF8D8D8D),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20),
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  'Cancel',
+                                                  style: TextStyle(fontSize: 16, color: Colors.white),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 20),
+                                              ElevatedButton(
+                                                onPressed: () => Navigator.of(context).pop(true),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: const Color(0xFF8D8D8D),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(20),
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  'Delete',
+                                                  style: TextStyle(fontSize: 16, color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  if (confirm == true) {
+                                    try {
+                                      await ref.read(deleteProductProvider);
+                                      GoRouter.of(context).pop();
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Error: $e')),
+                                      );
+                                    }
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
                         Row(
                           children: [
                             GestureDetector(

@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:regive_v3/components/CustomTextField.dart';
 import 'package:regive_v3/components/ProductCard.dart';
+import 'package:regive_v3/components/SearchComponent.dart';
 import 'package:regive_v3/components/custom_show_modal_bottom_sheet.dart';
 import 'package:regive_v3/repositories/product_repository.dart';
 
@@ -21,12 +21,9 @@ class ProductManagerScreen extends ConsumerWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                CustomTextField(
-                  labelText: 'Search a product',
-                  hintText: 'Enter a product name',
-                  prefixIcon: Icons.search,
-                  keyboardType: TextInputType.text,
-                ),
+                const SizedBox(height: 20),
+                SearchComponent(),
+                const SizedBox(height: 20),
                 userProductsAsync.when(
                   loading:
                       () => const Center(child: CircularProgressIndicator()),

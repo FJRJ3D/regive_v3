@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:regive_v3/providers/global_providers.dart';
 import 'package:regive_v3/screens/ConfigurationScreen.dart';
 import 'package:regive_v3/screens/MainScreen.dart';
 import 'package:regive_v3/screens/MessageScreen.dart';
@@ -26,6 +27,9 @@ class TabBarWidget extends ConsumerWidget {
 
     void _onItemTapped(int index) {
       ref.read(currentIndexProvider.notifier).state = index;
+
+      final shouldShow = index != 2;
+      ref.read(showOwnerAndOrderProvider.notifier).state = shouldShow;
     }
 
     return Scaffold(
