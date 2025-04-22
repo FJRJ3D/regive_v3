@@ -76,6 +76,15 @@ void CustomShowModalBottomSheet(BuildContext context, WidgetRef ref) {
                                       width: 150,
                                       height: 150,
                                     ),
+                                  )
+                                else if (ref.watch(productImageUrlProvider).isNotEmpty)
+                                  ClipOval(
+                                    child: Image.network(
+                                      ref.read(productImageUrlProvider),
+                                      fit: BoxFit.cover,
+                                      width: 150,
+                                      height: 150,
+                                    ),
                                   ),
                                 const Opacity(
                                   opacity: 0.4,
@@ -94,7 +103,8 @@ void CustomShowModalBottomSheet(BuildContext context, WidgetRef ref) {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    TextField(
+                    TextFormField(
+                      initialValue: ref.read(productNameProvider),
                       onChanged:
                           (value) =>
                               ref.read(productNameProvider.notifier).state =
@@ -119,6 +129,7 @@ void CustomShowModalBottomSheet(BuildContext context, WidgetRef ref) {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
+                      initialValue: ref.read(productDescriptionProvider),
                       onChanged:
                           (value) =>
                               ref

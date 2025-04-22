@@ -38,6 +38,8 @@ final productNameProvider = StateProvider<String>((ref) => '');
 
 final productDescriptionProvider = StateProvider<String>((ref) => '');
 
+final productImageUrlProvider = StateProvider<String>((ref) => '');
+
 final selectedCategoryIdProvider = StateProvider<String?>((ref) => null);
 
 final selectedSubcategoryIdProvider = StateProvider<String?>((ref) => null);

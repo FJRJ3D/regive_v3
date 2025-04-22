@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:regive_v3/components/custom_show_modal_bottom_sheet.dart';
 import 'package:regive_v3/models/Product.dart';
 import 'package:regive_v3/repositories/category_repository.dart';
 import 'package:regive_v3/repositories/product_repository.dart';
@@ -160,7 +161,7 @@ class ProductComponent extends ConsumerWidget {
                                 icon: Icon(Icons.edit, size: 30,),
                                 color: Color(0xFF8D8D8D),
                                 onPressed: () {
-                                  print("Edit button pressed");
+                                  CustomShowModalBottomSheet(context, ref);
                                 },
                               ),
                               IconButton(

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:regive_v3/components/ProductCard.dart';
 import 'package:regive_v3/components/SearchComponent.dart';
 import 'package:regive_v3/components/custom_show_modal_bottom_sheet.dart';
+import 'package:regive_v3/providers/global_providers.dart';
 import 'package:regive_v3/repositories/product_repository.dart';
 
 class ProductManagerScreen extends ConsumerWidget {
@@ -50,6 +51,12 @@ class ProductManagerScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(10.0),
             child: FloatingActionButton(
               onPressed: () {
+                ref.read(productNameProvider.notifier).state = '';
+                ref.read(productDescriptionProvider.notifier).state = '';
+                ref.read(productImageUrlProvider.notifier).state = '';
+                ref.read(capturedImageProvider.notifier).state = null;
+                ref.read(selectedCategoryIdProvider.notifier).state = null;
+                ref.read(selectedSubcategoryIdProvider.notifier).state = null;
                 CustomShowModalBottomSheet(context, ref);
               },
               child: const Icon(Icons.add, size: 25, color: Colors.white),
