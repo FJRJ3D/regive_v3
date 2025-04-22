@@ -23,7 +23,7 @@ final orderServiceProvider = AutoDisposeProvider<OrderService>.internal(
 // ignore: unused_element
 typedef OrderServiceRef = AutoDisposeProviderRef<OrderService>;
 String _$fetchOrderWithProductHash() =>
-    r'7df1479d87c04ab811d4533b185e2ede3b4925ab';
+    r'150c0fcf3d0c98aa5c7b35e85c463f2ce039b2f0';
 
 /// Copied from Dart SDK
 class _SystemHash {
