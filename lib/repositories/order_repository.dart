@@ -30,14 +30,17 @@ class OrderRepository {
   Future<List<ProductOrder>> fetchOrdersByUserId(Ref ref, String userId) async {
     final lastOrderDoc = ref.read(lastOrderDocProvider);
     Query<Map<String, dynamic>> query = firestore.collection('orders').where('userId', isEqualTo: userId);
-    if(lastOrderDoc != null) {
-      query = query.startAfterDocument(lastOrderDoc);
-    }
+    // if(lastOrderDoc != null) {
+    //   query = query.startAfterDocument(lastOrderDoc);
+    //   print('add to firebase last doc');
+    // }
     final ordersDoc = await query.limit(5).get();
     if (ordersDoc.docs.isNotEmpty) {
       ref.read(lastOrderDocProvider.notifier).state = ordersDoc.docs.last;
+      print('add last doc');
     }
     final orderList = ordersDoc.docs.map((doc) => ProductOrder.formDocumentSnapshot(doc)).toList();
+    print('order list: $orderList');
     return orderList;
   }
 }

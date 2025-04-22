@@ -108,10 +108,32 @@ class ProductRepository {
   }
 
   Future<List<Product>> fetchProductsByIdsList(List<String> ids) async {
-    final List<Future<DocumentSnapshot<Map<String, dynamic>>>> futures = ids.map((id) => firestore.collection('products').doc(id).get()).toList();
-    final List<DocumentSnapshot<Map<String, dynamic>>> snapshots = await Future.wait(futures);
+    print('Fetching products for IDs: $ids');
+    if (ids.isEmpty) return [];
 
-    final List<Product> products = snapshots.where((doc) => doc.exists).map((productDoc) => Product.formDocumentSnapshot(productDoc)).toList();
+    final futures = ids
+        .map((id) => firestore.collection('products').doc(id).get())
+        .toList();
+
+    final snapshots = await Future.wait(futures);
+    print('Received snapshots: ${snapshots.length}');
+
+    final products = snapshots.map((doc) {
+      final data = doc.data();
+      if (data == null) {
+        return null;
+      }
+      try {
+        final product = Product.formDocumentSnapshot(doc);
+        print('Parsed product: ${product.id}');
+        return product;
+      } catch (e) {
+        print('Error parsing product ${doc.id}: $e');
+        return null;
+      }
+    }).whereType<Product>().toList();
+
+    print('Fetched products: $products');
     return products;
   }
 }

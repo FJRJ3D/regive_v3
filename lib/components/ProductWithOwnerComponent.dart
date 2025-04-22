@@ -5,10 +5,10 @@ import 'package:regive_v3/utils/date_format.dart';
 import 'package:regive_v3/view_models/ProductWithUser.dart';
 import 'package:regive_v3/providers/global_providers.dart';
 
-class ProductsComponent extends ConsumerWidget {
+class ProductWithOwnerComponent extends ConsumerWidget {
   final ProductWithUser item;
 
-  const ProductsComponent({super.key, required this.item});
+  const ProductWithOwnerComponent({super.key, required this.item});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
