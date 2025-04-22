@@ -310,5 +310,63 @@ class _FetchProductsByIdsListProviderElement
   List<String> get ids => (origin as FetchProductsByIdsListProvider).ids;
 }
 
+String _$createProductWithCurrentUserHash() =>
+    r'f2ccc779ca83bfcdde21995f8439878c8d194211';
+
+/// See also [createProductWithCurrentUser].
+@ProviderFor(createProductWithCurrentUser)
+final createProductWithCurrentUserProvider =
+    AutoDisposeFutureProvider<Product>.internal(
+      createProductWithCurrentUser,
+      name: r'createProductWithCurrentUserProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$createProductWithCurrentUserHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef CreateProductWithCurrentUserRef = AutoDisposeFutureProviderRef<Product>;
+String _$getAllUserProductsHash() =>
+    r'289290d81dcafb015bde377ecad15a260bed919b';
+
+/// See also [getAllUserProducts].
+@ProviderFor(getAllUserProducts)
+final getAllUserProductsProvider =
+    AutoDisposeStreamProvider<List<Product>>.internal(
+      getAllUserProducts,
+      name: r'getAllUserProductsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$getAllUserProductsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetAllUserProductsRef = AutoDisposeStreamProviderRef<List<Product>>;
+String _$deleteProductHash() => r'4d1dff78d8c708e07b640938710e2200a4eabd9c';
+
+/// See also [deleteProduct].
+@ProviderFor(deleteProduct)
+final deleteProductProvider = AutoDisposeFutureProvider<void>.internal(
+  deleteProduct,
+  name: r'deleteProductProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$deleteProductHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef DeleteProductRef = AutoDisposeFutureProviderRef<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

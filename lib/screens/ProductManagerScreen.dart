@@ -1,55 +1,64 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:regive_v3/components/CustomTextField.dart';
+import 'package:regive_v3/components/ProductCard.dart';
+import 'package:regive_v3/components/SearchComponent.dart';
+import 'package:regive_v3/components/custom_show_modal_bottom_sheet.dart';
+import 'package:regive_v3/repositories/product_repository.dart';
 
 class ProductManagerScreen extends ConsumerWidget {
   const ProductManagerScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            CustomTextField(
-              labelText: 'Search a product',
-              hintText: 'Enter a product name',
-              prefixIcon: Icons.search,
-              keyboardType: TextInputType.text,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withAlpha(100),
-                      blurRadius: 10,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                  color: Colors.white,
+    final userProductsAsync = ref.watch(getAllUserProductsProvider);
+
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topCenter,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                SearchComponent(),
+                const SizedBox(height: 20),
+                userProductsAsync.when(
+                  loading:
+                      () => const Center(child: CircularProgressIndicator()),
+                  error: (error, _) => Center(child: Text('Error: $error')),
+                  data: (products) {
+                    if (products.isEmpty) {
+                      return const Center(child: Text("No products found."));
+                    }
+                    return Column(
+                      children:
+                          products
+                              .map((product) => ProductCard(product: product))
+                              .toList(),
+                    );
+                  },
                 ),
-                width: double.infinity,
-                height: 140,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 185,
-                      height: double.infinity,
-                      child: Image.network(
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Huismus%2C_man.jpg/250px-Huismus%2C_man.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ],
-                )
-              ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                CustomShowModalBottomSheet(context, ref);
+              },
+              child: const Icon(Icons.add, size: 25, color: Colors.white),
+              backgroundColor: const Color(0xFFE8763B),
+              elevation: 10,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

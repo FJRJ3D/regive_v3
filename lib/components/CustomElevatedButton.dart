@@ -20,7 +20,7 @@ class CustomElevatedButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
-      width: 130,
+      width: 105,
       height: 50,
       child: ElevatedButton(
         onPressed: onPressed,

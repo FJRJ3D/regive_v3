@@ -5,13 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:regive_v3/components/OrderComponent.dart';
 import 'package:regive_v3/components/OwnerComponent.dart';
 import 'package:regive_v3/components/ProductComponent.dart';
-import 'package:regive_v3/view_models/ProductWithUser.dart';
+import 'package:regive_v3/providers/global_providers.dart';
 
 class ProductDetailsScreen extends ConsumerWidget {
   const ProductDetailsScreen({super.key, required});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final showOwnerAndOrder = ref.read(showOwnerAndOrderProvider);
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -57,8 +59,10 @@ class ProductDetailsScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ProductComponent(),
-                        OwnerComponent(),
-                        OrderComponent(),
+                        if (showOwnerAndOrder) ...[
+                          OwnerComponent(),
+                          OrderComponent(),
+                        ],
                       ],
                     ),
                   ),
