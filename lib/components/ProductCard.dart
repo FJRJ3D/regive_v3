@@ -25,6 +25,7 @@ class ProductCard extends ConsumerWidget {
           ref.read(capturedImageProvider.notifier).state = null;
           ref.read(selectedCategoryIdProvider.notifier).state = product.categoryId;
           ref.read(selectedSubcategoryIdProvider.notifier).state = product.subcategoryId;
+          ref.read(createProductUpdateProviderBool.notifier).state = false;
           GoRouter.of(context).push('/product-details');
         },
         child: Padding(

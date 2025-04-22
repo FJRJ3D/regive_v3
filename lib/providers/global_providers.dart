@@ -45,3 +45,5 @@ final selectedCategoryIdProvider = StateProvider<String?>((ref) => null);
 final selectedSubcategoryIdProvider = StateProvider<String?>((ref) => null);
 
 final showOwnerAndOrderProvider = StateProvider<bool>((ref) => true);
+
+final createProductUpdateProviderBool = StateProvider<bool>((ref) => true);

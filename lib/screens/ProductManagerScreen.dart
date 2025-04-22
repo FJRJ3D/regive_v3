@@ -57,6 +57,7 @@ class ProductManagerScreen extends ConsumerWidget {
                 ref.read(capturedImageProvider.notifier).state = null;
                 ref.read(selectedCategoryIdProvider.notifier).state = null;
                 ref.read(selectedSubcategoryIdProvider.notifier).state = null;
+                ref.read(createProductUpdateProviderBool.notifier).state = true;
                 CustomShowModalBottomSheet(context, ref);
               },
               child: const Icon(Icons.add, size: 25, color: Colors.white),

@@ -39,14 +39,24 @@ void CustomShowModalBottomSheet(BuildContext context, WidgetRef ref) {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text(
-                      "New Product",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    if (ref.watch(createProductUpdateProviderBool))
+                      const Text(
+                        "New Product",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      )
+                    else
+                      const Text(
+                        "Edit Product",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
                     const SizedBox(height: 10),
                     SizedBox(
                       width: 150,
@@ -77,7 +87,7 @@ void CustomShowModalBottomSheet(BuildContext context, WidgetRef ref) {
                                       height: 150,
                                     ),
                                   )
-                                else if (ref.watch(productImageUrlProvider).isNotEmpty)
+                                else if (ref.read(productImageUrlProvider).isNotEmpty)
                                   ClipOval(
                                     child: Image.network(
                                       ref.read(productImageUrlProvider),
@@ -233,11 +243,17 @@ void CustomShowModalBottomSheet(BuildContext context, WidgetRef ref) {
                     CustomElevatedButton(
                       text: 'Submit',
                       onPressed: () async {
-                        await ref.read(createProductWithCurrentUserProvider.future,);
-                        ref.read(capturedImageProvider.notifier).state = null;
-                        ref.read(selectedCategoryIdProvider.notifier).state = null;
-                        ref.read(selectedSubcategoryIdProvider.notifier).state = null;
-                        Navigator.pop(context);
+                        if (ref.read(createProductUpdateProviderBool)){
+                          await ref.read(createProductWithCurrentUserProvider.future,);
+                          ref.read(capturedImageProvider.notifier).state = null;
+                          ref.read(selectedCategoryIdProvider.notifier).state = null;
+                          ref.read(selectedSubcategoryIdProvider.notifier).state = null;
+                          Navigator.pop(context);
+                        }else{
+                          await ref.read(updateProductProvider.future,);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        }
                       },
                       backgroundColor: Colors.grey,
                       foregroundColor: Colors.white,

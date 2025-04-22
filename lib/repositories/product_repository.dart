@@ -262,7 +262,11 @@ Future<void> deleteProduct(Ref ref) async {
 //   }
 //
 //   final productData = productDoc.data();
-//   final productUserId = productData?['userId'];
+//   if (productData == null) {
+//     throw Exception('No product data found');
+//   }
+//
+//   final productUserId = productData['userId'];
 //
 //   if (productUserId != user.uid) {
 //     throw Exception('You do not have permission to delete this product');
@@ -272,14 +276,28 @@ Future<void> deleteProduct(Ref ref) async {
 //   String description = ref.read(productDescriptionProvider);
 //   String? categoryId = ref.read(selectedCategoryIdProvider);
 //   String? subcategoryId = ref.read(selectedSubcategoryIdProvider);
+//   final productImageUrlFromProvider = ref.read(productImageUrlProvider);
+//   final currentImageUrlFromFirestore = productData['imageUrl'] as String? ?? '';
 //
+//   String finalImageUrl;
 //
+//   if (productImageUrlFromProvider == currentImageUrlFromFirestore) {
+//     finalImageUrl = currentImageUrlFromFirestore;
+//   } else {
+//     final capturedImage = ref.read(capturedImageProvider);
+//     if (capturedImage == null) {
+//       throw Exception('No image captured');
+//     }
+//     final originalFile = File(capturedImage.path);
+//     final compressedFile = await compressImage(originalFile);
+//     finalImageUrl = await uploadImage(compressedFile, user);
+//   }
 //
 //   final updatedData = {
 //     'name': name,
 //     'description': description,
 //     'publishedDate': Timestamp.now(),
-//     'imageUrl': "asd",
+//     'imageUrl': finalImageUrl,
 //     'categoryId': categoryId,
 //     'subcategoryId': subcategoryId,
 //     'keywords': extractKeywords(name),
@@ -287,3 +305,63 @@ Future<void> deleteProduct(Ref ref) async {
 //
 //   await productRef.update(updatedData);
 // }
+
+@riverpod
+Future<void> updateProduct(Ref ref) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    throw Exception('No user is currently signed in');
+  }
+
+  final productRef = FirebaseFirestore.instance.collection('products').doc(ref.read(selectedProductProvider));
+
+  final productDoc = await productRef.get();
+  if (!productDoc.exists) {
+    throw Exception('The product does not exist');
+  }
+
+  final productData = productDoc.data();
+  if (productData == null) {
+    throw Exception('No product data found');
+  }
+
+  final productUserId = productData['userId'];
+
+  if (productUserId != user.uid) {
+    throw Exception('You do not have permission to delete this product');
+  }
+
+  String name = ref.read(productNameProvider);
+  String description = ref.read(productDescriptionProvider);
+  String? categoryId = ref.read(selectedCategoryIdProvider);
+  String? subcategoryId = ref.read(selectedSubcategoryIdProvider);
+  final capturedImage = ref.watch(capturedImageProvider);
+
+  String finalImageUrl;
+
+  if (capturedImage != null) {
+    final capturedImage = ref.read(capturedImageProvider);
+    if (capturedImage == null) {
+      throw Exception('No image captured');
+    }
+    final originalFile = File(capturedImage.path);
+    final compressedFile = await compressImage(originalFile);
+    finalImageUrl = await uploadImage(compressedFile, user);
+  } else if (ref.read(productImageUrlProvider).isNotEmpty) {
+    finalImageUrl = ref.read(productImageUrlProvider);
+  }else {
+    throw Exception('No image provided for the product');
+  }
+
+  final updatedData = {
+    'name': name,
+    'description': description,
+    'publishedDate': Timestamp.now(),
+    'imageUrl': finalImageUrl,
+    'categoryId': categoryId,
+    'subcategoryId': subcategoryId,
+    'keywords': extractKeywords(name),
+  };
+
+  await productRef.update(updatedData);
+}
