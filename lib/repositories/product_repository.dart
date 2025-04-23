@@ -128,6 +128,36 @@ class ProductRepository {
     print(productList.map((product) => product.categoryId));
     return productList;
   }
+
+  Future<List<Product>> fetchProductsByIdsList(List<String> ids) async {
+    print('Fetching products for IDs: $ids');
+    if (ids.isEmpty) return [];
+
+    final futures = ids
+        .map((id) => firestore.collection('products').doc(id).get())
+        .toList();
+
+    final snapshots = await Future.wait(futures);
+    print('Received snapshots: ${snapshots.length}');
+
+    final products = snapshots.map((doc) {
+      final data = doc.data();
+      if (data == null) {
+        return null;
+      }
+      try {
+        final product = Product.formDocumentSnapshot(doc);
+        print('Parsed product: ${product.id}');
+        return product;
+      } catch (e) {
+        print('Error parsing product ${doc.id}: $e');
+        return null;
+      }
+    }).whereType<Product>().toList();
+
+    print('Fetched products: $products');
+    return products;
+  }
 }
 
 @riverpod
@@ -148,6 +178,12 @@ Future<Product> fetchProductById(
 Future<List<Product>> fetchProductsBySearch(FetchProductsBySearchRef ref) async {
   final repo = ref.watch(productRepositoryProvider);
   return repo.fetchProductsBySearch(ref);
+}
+
+@riverpod
+Future<List<Product>> fetchProductsByIdsList(FetchProductsByIdsListRef ref, List<String> ids) async {
+  final repo = ref.watch(productRepositoryProvider);
+  return repo.fetchProductsByIdsList(ids);
 }
 
 @riverpod

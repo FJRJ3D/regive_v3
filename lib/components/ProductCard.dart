@@ -7,8 +7,10 @@ import 'package:regive_v3/providers/global_providers.dart';
 
 class ProductCard extends ConsumerWidget {
   final Product product;
+  final String? status;
+  final String? orderId;
 
-  const ProductCard({Key? key, required this.product}) : super(key: key);
+  const ProductCard({Key? key, required this.product,  this.status, this.orderId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -132,7 +134,7 @@ class ProductCard extends ConsumerWidget {
                               child: Align(
                                 alignment: Alignment.bottomRight,
                                 child: Text(
-                                  "Orders: 5",
+                                  status ?? 'Orders: 5',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -146,6 +148,15 @@ class ProductCard extends ConsumerWidget {
                         ],
                       ),
                     ),
+                    if(orderId != null)
+                      TextButton(
+                        onPressed: () {
+                          ref
+                              .read(orderNotifierProvider.notifier)
+                              .deleteOrder(orderId!);
+                        },
+                        child: Text('Delete'),
+                      ),
                   ],
                 );
               },

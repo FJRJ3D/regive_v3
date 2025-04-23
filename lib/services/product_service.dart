@@ -33,7 +33,6 @@ class ProductService {
   Future<List<ProductWithUser>> _formObjectProductWithUserByProductList(List<Product> productList) async {
     final userIds = productList.map((product) => product.userId).toSet().toList();
     final userDetailsList = await userDetailsRepository.fetchUserDetailsByUserIdsList(userIds);
-
     final userMap = {
       for (var userDetails in userDetailsList) userDetails.userId: userDetails,
     };

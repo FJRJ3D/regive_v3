@@ -57,7 +57,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       final product = productsWithUsers[index];
-                  return ProductsComponent(item: product);
+                  return ProductWithOwnerComponent(item: product);
                 },
                 childCount: productsWithUsers.length,
               ),

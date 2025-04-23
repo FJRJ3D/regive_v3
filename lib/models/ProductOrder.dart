@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Order {
+class ProductOrder {
   final String id;
   final bool isAccepted;
   final bool isFinished;
@@ -8,7 +8,7 @@ class Order {
   final String productId;
   final String userId;
 
-  Order({
+  ProductOrder({
     required this.id,
     required this.isAccepted,
     required this.isFinished,
@@ -28,8 +28,8 @@ class Order {
     };
   }
 
-  factory Order.formDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory ProductOrder.formDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data()!;
-    return Order(id: doc.id, isAccepted: data['isAccepted'], isFinished: data['isFinished'], reason: data['reason'], productId: data['productId'], userId: data['userId']);
+    return ProductOrder(id: doc.id, isAccepted: data['isAccepted'], isFinished: data['isFinished'], reason: data['reason'], productId: data['productId'], userId: data['userId']);
   }
 }

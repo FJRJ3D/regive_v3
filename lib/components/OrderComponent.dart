@@ -15,12 +15,10 @@ class OrderComponent extends ConsumerWidget {
       child: ElevatedButton(
         onPressed: () => _showBottomSheet(context, ref),
         style: ElevatedButton.styleFrom(
-          // primary: Colors.amber, // Button color
-          // onPrimary: Colors.black87, // Text color
-          elevation: 5, // Shadow depth
+          elevation: 5,
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15), // Rounded corners
+            borderRadius: BorderRadius.circular(15),
           ),
         ),
         child: const Text(
@@ -47,8 +45,6 @@ class OrderComponent extends ConsumerWidget {
       builder: (context) {
         return Padding(
           padding: EdgeInsets.only(
-            // left: 16,
-            // right: 16,
             bottom: MediaQuery.of(context).viewInsets.bottom + 16,
             top: 16,
           ),
@@ -82,7 +78,6 @@ class OrderComponent extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  // SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () async {
                       final enteredText = controller.text;
@@ -102,10 +97,10 @@ class OrderComponent extends ConsumerWidget {
                       ),
                       backgroundColor: MaterialStateProperty.all(
                         Colors.amber[100],
-                      ), // Колір фону кнопки
+                      ),
                       foregroundColor: MaterialStateProperty.all(
                         Colors.black54,
-                      ), // Колір тексту кнопки
+                      ),
                     ),
                   ),
                 ],
