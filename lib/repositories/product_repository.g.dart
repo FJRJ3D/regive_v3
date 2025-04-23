@@ -245,7 +245,7 @@ final deleteProductProvider = AutoDisposeFutureProvider<void>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeleteProductRef = AutoDisposeFutureProviderRef<void>;
-String _$updateProductHash() => r'5f6d0ffd6c13dc9905ce23013be0f4394a2857ac';
+String _$updateProductHash() => r'aa6b3184d620cf8838b83d5188818ab7d67d0dab';
 
 /// See also [updateProduct].
 @ProviderFor(updateProduct)
