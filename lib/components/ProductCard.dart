@@ -4,16 +4,24 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:regive_v3/models/Product.dart';
 import 'package:regive_v3/providers/global_providers.dart';
+import 'package:regive_v3/repositories/order_repository.dart';
 
 class ProductCard extends ConsumerWidget {
   final Product product;
   final String? status;
   final String? orderId;
 
-  const ProductCard({Key? key, required this.product,  this.status, this.orderId}) : super(key: key);
+  const ProductCard({
+    Key? key,
+    required this.product,
+    this.status,
+    this.orderId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final orderCountAsync = ref.watch(getOrderCountByProductProvider(product.id));
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -22,11 +30,14 @@ class ProductCard extends ConsumerWidget {
           ref.read(activeProductOwnerProvider.notifier).state = product.userId;
           ref.read(selectedProductProvider.notifier).state = product.id;
           ref.read(productNameProvider.notifier).state = product.name;
-          ref.read(productDescriptionProvider.notifier).state = product.description;
+          ref.read(productDescriptionProvider.notifier).state =
+              product.description;
           ref.read(productImageUrlProvider.notifier).state = product.imageUrl;
           ref.read(capturedImageProvider.notifier).state = null;
-          ref.read(selectedCategoryIdProvider.notifier).state = product.categoryId;
-          ref.read(selectedSubcategoryIdProvider.notifier).state = product.subcategoryId;
+          ref.read(selectedCategoryIdProvider.notifier).state =
+              product.categoryId;
+          ref.read(selectedSubcategoryIdProvider.notifier).state =
+              product.subcategoryId;
           ref.read(createProductUpdateProviderBool.notifier).state = false;
           GoRouter.of(context).push('/product-details');
         },
@@ -133,14 +144,33 @@ class ProductCard extends ConsumerWidget {
                               padding: const EdgeInsets.all(5),
                               child: Align(
                                 alignment: Alignment.bottomRight,
-                                child: Text(
-                                  status ?? 'Orders: 5',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Color(0xFF8D8D8D),
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                child: orderCountAsync.when(
+                                  data:
+                                      (count) => Text(
+                                        'Orders: $count',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Color(0xFF8D8D8D),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                  loading:
+                                      () => Text(
+                                        'Loading...',
+                                        style: TextStyle(
+                                          color: Color(0xFF8D8D8D),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                  error:
+                                      (e, _) => Text(
+                                        'Error',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                 ),
                               ),
                             ),
@@ -148,7 +178,7 @@ class ProductCard extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    if(orderId != null)
+                    if (orderId != null)
                       TextButton(
                         onPressed: () {
                           ref

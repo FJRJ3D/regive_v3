@@ -436,5 +436,129 @@ class _DeleteOrderByIdProviderElement
   String get orderId => (origin as DeleteOrderByIdProvider).orderId;
 }
 
+String _$getOrderCountByProductHash() =>
+    r'810a8e0b69a8bf64b9f1472e627fb50319df9154';
+
+/// See also [getOrderCountByProduct].
+@ProviderFor(getOrderCountByProduct)
+const getOrderCountByProductProvider = GetOrderCountByProductFamily();
+
+/// See also [getOrderCountByProduct].
+class GetOrderCountByProductFamily extends Family<AsyncValue<int>> {
+  /// See also [getOrderCountByProduct].
+  const GetOrderCountByProductFamily();
+
+  /// See also [getOrderCountByProduct].
+  GetOrderCountByProductProvider call(String productId) {
+    return GetOrderCountByProductProvider(productId);
+  }
+
+  @override
+  GetOrderCountByProductProvider getProviderOverride(
+    covariant GetOrderCountByProductProvider provider,
+  ) {
+    return call(provider.productId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getOrderCountByProductProvider';
+}
+
+/// See also [getOrderCountByProduct].
+class GetOrderCountByProductProvider extends AutoDisposeFutureProvider<int> {
+  /// See also [getOrderCountByProduct].
+  GetOrderCountByProductProvider(String productId)
+    : this._internal(
+        (ref) =>
+            getOrderCountByProduct(ref as GetOrderCountByProductRef, productId),
+        from: getOrderCountByProductProvider,
+        name: r'getOrderCountByProductProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$getOrderCountByProductHash,
+        dependencies: GetOrderCountByProductFamily._dependencies,
+        allTransitiveDependencies:
+            GetOrderCountByProductFamily._allTransitiveDependencies,
+        productId: productId,
+      );
+
+  GetOrderCountByProductProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.productId,
+  }) : super.internal();
+
+  final String productId;
+
+  @override
+  Override overrideWith(
+    FutureOr<int> Function(GetOrderCountByProductRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetOrderCountByProductProvider._internal(
+        (ref) => create(ref as GetOrderCountByProductRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        productId: productId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<int> createElement() {
+    return _GetOrderCountByProductProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetOrderCountByProductProvider &&
+        other.productId == productId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, productId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin GetOrderCountByProductRef on AutoDisposeFutureProviderRef<int> {
+  /// The parameter `productId` of this provider.
+  String get productId;
+}
+
+class _GetOrderCountByProductProviderElement
+    extends AutoDisposeFutureProviderElement<int>
+    with GetOrderCountByProductRef {
+  _GetOrderCountByProductProviderElement(super.provider);
+
+  @override
+  String get productId => (origin as GetOrderCountByProductProvider).productId;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

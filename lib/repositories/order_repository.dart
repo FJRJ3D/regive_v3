@@ -71,3 +71,14 @@ Future<void> deleteOrderById(DeleteOrderByIdRef ref, String orderId) async {
   final repo = ref.watch(orderRepositoryProvider);
   return repo.deleteOrderById(orderId);
 }
+
+@riverpod
+Future<int> getOrderCountByProduct(Ref ref, String productId) async {
+
+  final querySnapshot = await FirebaseFirestore.instance
+      .collection('orders')
+      .where('productId', isEqualTo: productId)
+      .get();
+
+  return querySnapshot.size;
+}
