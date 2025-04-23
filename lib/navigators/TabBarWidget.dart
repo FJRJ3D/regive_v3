@@ -30,6 +30,10 @@ class TabBarWidget extends ConsumerWidget {
 
       final shouldShow = index != 2;
       ref.read(showOwnerAndOrderProvider.notifier).state = shouldShow;
+
+      ref.invalidate(lastProductDocProvider);
+      ref.invalidate(productsNotifierProvider);
+      ref.read(productsNotifierProvider.notifier).loadMoreProducts();
     }
 
     return Scaffold(

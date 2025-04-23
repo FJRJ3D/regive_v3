@@ -13,20 +13,29 @@ part 'product_repository.g.dart';
 
 class ProductRepository {
   final FirebaseFirestore firestore;
+  final FirebaseAuth auth;
 
-  ProductRepository(this.firestore);
+  ProductRepository(this.firestore, this.auth);
 
   Future<List<Product>> fetchLatestProducts(Ref ref) async {
+    final user = auth.currentUser;
+    if (user == null) {
+      throw Exception('No user is currently signed in');
+    }
+    final userId = user.uid;
+
     final lastProductDoc = ref.read(lastProductDocProvider);
     print("products is started");
     QuerySnapshot<Map<String, dynamic>> productsSnapshot;
     if (lastProductDoc == null) {
-      productsSnapshot =
-      await firestore
+      Query<Map<String, dynamic>> query = firestore
           .collection('products')
           .orderBy('publishedDate', descending: true)
-          .limit(5)
-          .get();
+          .limit(5);
+      if (!ref.read(showOwnerAndOrderProvider)) {
+        query = query.where('userId', isEqualTo: userId);
+      }
+      productsSnapshot = await query.get();
     } else {
       productsSnapshot =
       await firestore
@@ -114,7 +123,7 @@ class ProductRepository {
 
 @riverpod
 ProductRepository productRepository(ProductRepositoryRef ref) {
-  return ProductRepository(FirebaseFirestore.instance);
+  return ProductRepository(FirebaseFirestore.instance, FirebaseAuth.instance);
 }
 
 @riverpod
@@ -170,81 +179,6 @@ Future<Product> createProductWithCurrentUser(Ref ref) async {
   await firestore.set(newProduct.toMap());
 
   return newProduct;
-}
-
-Future<String> uploadImage (File image, User user) async {
-  final String namefile = image.path.split("/").last;
-
-  final Reference storageRef = FirebaseStorage.instance
-      .ref()
-      .child(user.uid)
-      .child("images")
-      .child(namefile);
-
-  final UploadTask uploadTask = storageRef.putFile(image);
-  final TaskSnapshot snapshot = await uploadTask.whenComplete(() => true);
-  final String url = await snapshot.ref.getDownloadURL();
-  return url;
-}
-
-List<dynamic> extractKeywords(String input) {
-  return input
-      .split(' ')
-      .map((word) => word.toLowerCase())
-      .toList();
-}
-
-@riverpod
-Stream<List<Product>> getAllUserProducts(Ref ref)  {
-  final user = FirebaseAuth.instance.currentUser;
-
-  if (user == null) {
-    throw Exception('There is no authenticated user.');
-  }
-
-  final userId = user.uid;
-
-  return FirebaseFirestore.instance
-      .collection('products')
-      .where('userId', isEqualTo: userId)
-      .orderBy('publishedDate', descending: true)
-      .limit(10)
-      .snapshots()
-      .map((querySnapshot) =>
-      querySnapshot.docs.map(Product.formDocumentSnapshot).toList());
-}
-
-@riverpod
-Future<void> deleteProduct(Ref ref) async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      throw Exception('No user is currently signed in');
-    }
-
-    final productDoc = await FirebaseFirestore.instance.collection('products').doc(ref.read(selectedProductProvider)).get();
-
-    if (!productDoc.exists) {
-      throw Exception('The product does not exist');
-    }
-
-    final productData = productDoc.data();
-    final productUserId = productData?['userId'];
-
-    if (productUserId != user.uid) {
-      throw Exception('You do not have permission to delete this product');
-    }
-
-    final imageUrl = productData?['imageUrl'];
-    if (imageUrl != null) {
-      final storageRef = FirebaseStorage.instance.refFromURL(imageUrl);
-      await storageRef.delete();
-    }
-
-    await productDoc.reference.delete();
-  } catch (e) {
-    throw Exception('Could not delete the product');
-  }
 }
 
 @riverpod
@@ -310,4 +244,59 @@ Future<void> updateProduct(Ref ref) async {
   };
 
   await productRef.update(updatedData);
+}
+
+@riverpod
+Future<void> deleteProduct(Ref ref) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('No user is currently signed in');
+    }
+
+    final productDoc = await FirebaseFirestore.instance.collection('products').doc(ref.read(selectedProductProvider)).get();
+
+    if (!productDoc.exists) {
+      throw Exception('The product does not exist');
+    }
+
+    final productData = productDoc.data();
+    final productUserId = productData?['userId'];
+
+    if (productUserId != user.uid) {
+      throw Exception('You do not have permission to delete this product');
+    }
+
+    final imageUrl = productData?['imageUrl'];
+    if (imageUrl != null) {
+      final storageRef = FirebaseStorage.instance.refFromURL(imageUrl);
+      await storageRef.delete();
+    }
+
+    await productDoc.reference.delete();
+  } catch (e) {
+    throw Exception('Could not delete the product');
+  }
+}
+
+Future<String> uploadImage (File image, User user) async {
+  final String namefile = image.path.split("/").last;
+
+  final Reference storageRef = FirebaseStorage.instance
+      .ref()
+      .child(user.uid)
+      .child("images")
+      .child(namefile);
+
+  final UploadTask uploadTask = storageRef.putFile(image);
+  final TaskSnapshot snapshot = await uploadTask.whenComplete(() => true);
+  final String url = await snapshot.ref.getDownloadURL();
+  return url;
+}
+
+List<dynamic> extractKeywords(String input) {
+  return input
+      .split(' ')
+      .map((word) => word.toLowerCase())
+      .toList();
 }

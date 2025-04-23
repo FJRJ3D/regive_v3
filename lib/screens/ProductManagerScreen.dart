@@ -6,43 +6,64 @@ import 'package:regive_v3/components/ProductCard.dart';
 import 'package:regive_v3/components/SearchComponent.dart';
 import 'package:regive_v3/components/custom_show_modal_bottom_sheet.dart';
 import 'package:regive_v3/providers/global_providers.dart';
-import 'package:regive_v3/repositories/product_repository.dart';
 
-class ProductManagerScreen extends ConsumerWidget {
+class ProductManagerScreen extends ConsumerStatefulWidget {
   const ProductManagerScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final userProductsAsync = ref.watch(getAllUserProductsProvider);
+  ConsumerState<ProductManagerScreen> createState() =>
+      _ProductManagerScreenState();
+}
+
+class _ProductManagerScreenState extends ConsumerState<ProductManagerScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    ref.read(productsNotifierProvider.notifier).loadMoreProducts();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
+      ref.read(productsNotifierProvider.notifier).loadMoreProducts();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final userProductsAsync = ref.watch(productsNotifierProvider);
 
     return Stack(
       children: [
         Align(
           alignment: Alignment.topCenter,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                SearchComponent(),
-                const SizedBox(height: 20),
-                userProductsAsync.when(
-                  loading:
-                      () => const Center(child: CircularProgressIndicator()),
-                  error: (error, _) => Center(child: Text('Error: $error')),
-                  data: (products) {
-                    if (products.isEmpty) {
-                      return const Center(child: Text("No products found."));
-                    }
-                    return Column(
-                      children:
-                          products
-                              .map((product) => ProductCard(product: product))
-                              .toList(),
-                    );
-                  },
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding (
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 70),
+                  child: SearchComponent(),
                 ),
-              ],
-            ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    final product = userProductsAsync[index];
+                    return ProductCard(product: product.product);
+                  },
+                  childCount: userProductsAsync.length,
+                ),
+              ),
+            ],
           ),
         ),
         Align(
