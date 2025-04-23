@@ -21,6 +21,13 @@ class ProductCard extends ConsumerWidget {
         onTap: () {
           ref.read(activeProductOwnerProvider.notifier).state = product.userId;
           ref.read(selectedProductProvider.notifier).state = product.id;
+          ref.read(productNameProvider.notifier).state = product.name;
+          ref.read(productDescriptionProvider.notifier).state = product.description;
+          ref.read(productImageUrlProvider.notifier).state = product.imageUrl;
+          ref.read(capturedImageProvider.notifier).state = null;
+          ref.read(selectedCategoryIdProvider.notifier).state = product.categoryId;
+          ref.read(selectedSubcategoryIdProvider.notifier).state = product.subcategoryId;
+          ref.read(createProductUpdateProviderBool.notifier).state = false;
           GoRouter.of(context).push('/product-details');
         },
         child: Padding(

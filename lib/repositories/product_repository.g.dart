@@ -245,6 +245,24 @@ final deleteProductProvider = AutoDisposeFutureProvider<void>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeleteProductRef = AutoDisposeFutureProviderRef<void>;
+String _$updateProductHash() => r'aa6b3184d620cf8838b83d5188818ab7d67d0dab';
+
+/// See also [updateProduct].
+@ProviderFor(updateProduct)
+final updateProductProvider = AutoDisposeFutureProvider<void>.internal(
+  updateProduct,
+  name: r'updateProductProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$updateProductHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UpdateProductRef = AutoDisposeFutureProviderRef<void>;
 String _$fetchProductsByIdsListHash() =>
     r'e3072c9851c02a0d58d2429ee54470142ff6c55c';
 
