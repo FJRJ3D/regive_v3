@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:regive_v3/components/CustomElevatedButton.dart';
 import 'package:regive_v3/components/OrderComponent.dart';
 import 'package:regive_v3/components/OwnerComponent.dart';
 import 'package:regive_v3/components/ProductComponent.dart';
 import 'package:regive_v3/providers/global_providers.dart';
+import 'package:regive_v3/repositories/order_repository.dart';
 
 class ProductDetailsScreen extends ConsumerWidget {
   const ProductDetailsScreen({super.key, required});
@@ -13,6 +15,7 @@ class ProductDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final showOwnerAndOrder = ref.read(showOwnerAndOrderProvider);
+    final orderCountAsync = ref.watch(getOrderCountByProductProvider(ref.read(selectedProductProvider)!));
 
     return Scaffold(
       body: Container(
@@ -62,6 +65,49 @@ class ProductDetailsScreen extends ConsumerWidget {
                         if (showOwnerAndOrder) ...[
                           OwnerComponent(),
                           OrderComponent(),
+                        ]else ...[
+                          const SizedBox(height: 20),
+                          Center(child: SizedBox(
+                            width: 150,
+                            child: CustomElevatedButton(
+                              child: orderCountAsync.when(
+                                data:
+                                    (count) => Text(
+                                  'Orders: $count',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                loading:
+                                    () => Text(
+                                  'Loading...',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                error:
+                                    (e, _) => Text(
+                                  'Error',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {
+                                print("button pressed");
+                              },
+                              backgroundColor: const Color(0xFFE66A35),
+                              foregroundColor: Colors.white,),
+                          ),
+                          )
                         ],
                       ],
                     ),

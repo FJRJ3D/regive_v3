@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CustomElevatedButton extends ConsumerWidget {
-  final String text;
+  final String? text;
+  final Widget? child;
   final VoidCallback onPressed;
   final Color backgroundColor;
   final Color foregroundColor;
@@ -10,7 +11,8 @@ class CustomElevatedButton extends ConsumerWidget {
 
   const CustomElevatedButton({
     super.key,
-    required this.text,
+    this.text,
+    this.child,
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
@@ -34,7 +36,7 @@ class CustomElevatedButton extends ConsumerWidget {
         ),
         child: icon != null
             ? Icon(icon, size: 22)
-            : Text(text, style: TextStyle(fontWeight: FontWeight.bold)),
+            : child ?? Text(text ?? '', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }
