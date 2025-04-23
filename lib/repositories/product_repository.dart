@@ -67,6 +67,12 @@ class ProductRepository {
   }
 
   Future<List<Product>> fetchProductsBySearch(Ref ref) async {
+    final user = auth.currentUser;
+    if (user == null) {
+      throw Exception('No user is currently signed in');
+    }
+    final userId = user.uid;
+
     final inputtedText = ref.watch(inputtedTextToSearchProvider);
     final categoryId = ref.watch(selectedCategoryIdProvider);
     print("categoryId: $categoryId");
@@ -103,6 +109,9 @@ class ProductRepository {
     if (subcategoryId != null) {
       query = query.where('subcategoryId', isEqualTo: subcategoryId);
       print("add subcategory id");
+    }
+    if (!ref.read(showOwnerAndOrderProvider)) {
+      query = query.where('userId', isEqualTo: userId);
     }
     final productsSnapshot = await query.limit(5).get();
     if (productsSnapshot.docs.isNotEmpty) {
