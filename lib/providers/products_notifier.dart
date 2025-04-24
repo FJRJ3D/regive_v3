@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:regive_v3/models/Product.dart';
+import 'package:regive_v3/models/UserDetails.dart';
 import 'package:regive_v3/providers/global_providers.dart';
 import 'package:regive_v3/repositories/product_repository.dart';
 import 'package:regive_v3/services/product_service.dart';
@@ -42,6 +45,79 @@ class ProductsNotifier extends StateNotifier<List<ProductWithUser>> {
     } finally {
       _isLoading = false;
       print("Loading process completed");
+    }
+  }
+
+  Future<void> createProduct() async {
+    try {
+      final productId = ref.read(selectedProductProvider);
+
+      final querySnapshotProduct = await FirebaseFirestore.instance
+          .collection('products')
+          .where('id', isEqualTo: productId)
+          .get();
+
+      if (querySnapshotProduct.docs.isEmpty) {
+        throw Exception("No UserDetails found for this user");
+      }
+
+      final productDoc = querySnapshotProduct.docs.first;
+      final product = Product.formDocumentSnapshot(productDoc);
+
+      final querySnapshotUserDetails = await FirebaseFirestore.instance
+          .collection('userDetails')
+          .where('id', isEqualTo: product.userDetailsId)
+          .get();
+
+      if (querySnapshotUserDetails.docs.isEmpty) {
+        throw Exception("No UserDetails found for this user");
+      }
+
+      final userDetailsDoc = querySnapshotUserDetails.docs.first;
+      final userDetails = UserDetails.formDocumentSnapshot(userDetailsDoc);
+
+      state = [...state, ProductWithUser(product: product, userDetails: userDetails)];
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateProduct() async {
+    try {
+      final productId = ref.read(selectedProductProvider);
+
+      final querySnapshotProduct = await FirebaseFirestore.instance
+          .collection('products')
+          .where('id', isEqualTo: productId)
+          .get();
+
+      if (querySnapshotProduct.docs.isEmpty) {
+        throw Exception("No UserDetails found for this user");
+      }
+
+      final productDoc = querySnapshotProduct.docs.first;
+      final product = Product.formDocumentSnapshot(productDoc);
+
+      final querySnapshotUserDetails = await FirebaseFirestore.instance
+          .collection('userDetails')
+          .where('id', isEqualTo: product.userDetailsId)
+          .get();
+
+      if (querySnapshotUserDetails.docs.isEmpty) {
+        throw Exception("No UserDetails found for this user");
+      }
+
+      final userDetailsDoc = querySnapshotUserDetails.docs.first;
+      final userDetails = UserDetails.formDocumentSnapshot(userDetailsDoc);
+
+      state = state.map((productWithUser) {
+        if (productWithUser.product.id == productId) {
+          return ProductWithUser(product: product, userDetails: userDetails);
+        }
+        return productWithUser;
+      }).toList();
+    } catch (error) {
+      rethrow;
     }
   }
 

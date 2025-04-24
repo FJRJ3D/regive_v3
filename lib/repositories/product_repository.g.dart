@@ -311,7 +311,7 @@ class _FetchProductsByIdsListProviderElement
 }
 
 String _$createProductWithCurrentUserHash() =>
-    r'f2ccc779ca83bfcdde21995f8439878c8d194211';
+    r'21e30139ed754982e87899e2128e56c2d056f392';
 
 /// See also [createProductWithCurrentUser].
 @ProviderFor(createProductWithCurrentUser)
@@ -348,7 +348,7 @@ final updateProductProvider = AutoDisposeFutureProvider<void>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UpdateProductRef = AutoDisposeFutureProviderRef<void>;
-String _$deleteProductHash() => r'4d1dff78d8c708e07b640938710e2200a4eabd9c';
+String _$deleteProductHash() => r'a28cc69d35af1e9f9a599db75dcf8c0109465c58';
 
 /// See also [deleteProduct].
 @ProviderFor(deleteProduct)

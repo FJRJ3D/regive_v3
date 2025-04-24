@@ -170,7 +170,7 @@ class _SignInWithEmailPasswordProviderElement
 }
 
 String _$registerWithEmailPasswordHash() =>
-    r'f6980697bddd5bed8333ae8b8f46a4b89aac3b5a';
+    r'7395500eb83aaa452131acbd621461a910f32035';
 
 /// See also [registerWithEmailPassword].
 @ProviderFor(registerWithEmailPassword)
@@ -186,7 +186,7 @@ class RegisterWithEmailPasswordFamily
   RegisterWithEmailPasswordProvider call({
     required String email,
     required String password,
-    String? displayName,
+    required String displayName,
   }) {
     return RegisterWithEmailPasswordProvider(
       email: email,
@@ -228,7 +228,7 @@ class RegisterWithEmailPasswordProvider
   RegisterWithEmailPasswordProvider({
     required String email,
     required String password,
-    String? displayName,
+    required String displayName,
   }) : this._internal(
          (ref) => registerWithEmailPassword(
            ref as RegisterWithEmailPasswordRef,
@@ -264,7 +264,7 @@ class RegisterWithEmailPasswordProvider
 
   final String email;
   final String password;
-  final String? displayName;
+  final String displayName;
 
   @override
   Override overrideWith(
@@ -322,7 +322,7 @@ mixin RegisterWithEmailPasswordRef
   String get password;
 
   /// The parameter `displayName` of this provider.
-  String? get displayName;
+  String get displayName;
 }
 
 class _RegisterWithEmailPasswordProviderElement
@@ -335,7 +335,7 @@ class _RegisterWithEmailPasswordProviderElement
   @override
   String get password => (origin as RegisterWithEmailPasswordProvider).password;
   @override
-  String? get displayName =>
+  String get displayName =>
       (origin as RegisterWithEmailPasswordProvider).displayName;
 }
 

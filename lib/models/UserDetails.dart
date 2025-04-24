@@ -18,7 +18,7 @@ class UserDetails {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': username,
+      'username': username,
       'imageUrl': imageUrl,
       'wasOnline': wasOnline,
       'userId': userId,

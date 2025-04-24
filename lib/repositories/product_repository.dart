@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:regive_v3/models/Product.dart';
+import 'package:regive_v3/models/UserDetails.dart';
 import 'package:regive_v3/providers/global_providers.dart';
 import 'package:regive_v3/repositories/compress_image.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -210,6 +211,19 @@ Future<Product> createProductWithCurrentUser(Ref ref) async {
   final firestore = FirebaseFirestore.instance.collection('products').doc();
   final generatedId = firestore.id;
 
+  final querySnapshot = await FirebaseFirestore.instance
+      .collection('userDetails')
+      .where('userId', isEqualTo: user.uid)
+      .limit(1)
+      .get();
+
+  if (querySnapshot.docs.isEmpty) {
+    throw Exception("No UserDetails found for this user");
+  }
+
+  final userDetailsDoc = querySnapshot.docs.first;
+  final userDetails = UserDetails.formDocumentSnapshot(userDetailsDoc);
+
   final newProduct = Product(
       id: generatedId,
       name: name,
@@ -217,6 +231,7 @@ Future<Product> createProductWithCurrentUser(Ref ref) async {
       publishedDate: Timestamp.now(),
       imageUrl: await uploadImage(compressedFile, user),
       userId: user.uid,
+      userDetailsId: userDetails.id,
       categoryId: categoryId!,
       subcategoryId: subcategoryId!,
       keywords: keywords);
@@ -310,6 +325,15 @@ Future<void> deleteProduct(Ref ref) async {
 
     if (productUserId != user.uid) {
       throw Exception('You do not have permission to delete this product');
+    }
+
+    final ordersQuery = await FirebaseFirestore.instance
+        .collection('orders')
+        .where('productId', isEqualTo: productDoc.id)
+        .get();
+
+    for (final orderDoc in ordersQuery.docs) {
+      await orderDoc.reference.delete();
     }
 
     final imageUrl = productData?['imageUrl'];

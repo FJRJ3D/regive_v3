@@ -244,13 +244,16 @@ void CustomShowModalBottomSheet(BuildContext context, WidgetRef ref) {
                       text: 'Submit',
                       onPressed: () async {
                         if (ref.read(createProductUpdateProviderBool)){
-                          await ref.read(createProductWithCurrentUserProvider.future,);
+                          final product = await ref.read(createProductWithCurrentUserProvider.future,);
+                          ref.read(selectedProductProvider.notifier).state = product.id;
                           ref.read(capturedImageProvider.notifier).state = null;
                           ref.read(selectedCategoryIdProvider.notifier).state = null;
                           ref.read(selectedSubcategoryIdProvider.notifier).state = null;
+                          ref.read(productsNotifierProvider.notifier).createProduct();
                           Navigator.pop(context);
                         }else{
                           await ref.read(updateProductProvider.future,);
+                          ref.read(productsNotifierProvider.notifier).updateProduct();
                           Navigator.pop(context);
                           Navigator.pop(context);
                         }

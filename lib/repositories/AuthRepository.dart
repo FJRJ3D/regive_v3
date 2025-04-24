@@ -1,8 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:regive_v3/main.dart';
+import 'package:regive_v3/models/UserDetails.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'AuthRepository.g.dart';
@@ -29,17 +28,34 @@ Future<UserCredential?> registerWithEmailPassword(
   Ref ref, {
   required String email,
   required String password,
-  String? displayName,
+  required String displayName,
 }) async {
   try {
     UserCredential userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
 
-    if (displayName != null) {
-      await userCredential.user?.updateDisplayName(displayName);
-      await userCredential.user?.reload();
-    }
+    await userCredential.user?.updateDisplayName(displayName);
+    await userCredential.user?.reload();
+
     await _forceTokenRefresh();
+
+    final userDetails = FirebaseFirestore.instance.collection('userDetails').doc();
+    final generatedUserId = userDetails.id;
+
+    final firebaseUserDetails = userCredential.user;
+    if (firebaseUserDetails == null) {
+      throw Exception("User creation failed");
+    }
+
+    final newUserDetails = UserDetails(
+      id: generatedUserId,
+      username: displayName,
+      imageUrl: "",
+      wasOnline: Timestamp.now(),
+      userId: firebaseUserDetails.uid,);
+
+    await userDetails.set(newUserDetails.toMap());
+
     return userCredential;
   } on FirebaseAuthException catch (e) {
     print('Registration error: ${e.message}');
