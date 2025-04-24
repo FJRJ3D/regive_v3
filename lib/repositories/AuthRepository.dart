@@ -83,3 +83,12 @@ Future<String> getUserId(GetUserIdRef ref) async {
   }
   return user.uid;
 }
+
+@riverpod
+Future<User?> getUser(GetUserRef ref) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    throw Exception('User not authenticated');
+  }
+  return user;
+}
