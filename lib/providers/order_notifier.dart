@@ -1,5 +1,8 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:regive_v3/models/Product.dart';
+import 'package:regive_v3/providers/global_providers.dart';
 import 'package:regive_v3/repositories/order_repository.dart';
 import 'package:regive_v3/services/order_service.dart';
 import 'package:regive_v3/view_models/OrderWithProduct.dart';
@@ -17,6 +20,15 @@ class OrderNotifier extends StateNotifier<List<OrderWithProduct>> {
     try {
       await ref.read(deleteOrderByIdProvider(orderId));
       state = state.where((order) => order.productOrder.id != orderId).toList();
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteOrdersByProductId() async {
+    try {
+      final productId = ref.read(selectedProductProvider);
+      state = state.where((order) => order.productOrder.productId != productId).toList();
     } catch (error) {
       rethrow;
     }

@@ -221,6 +221,7 @@ class ProductComponent extends ConsumerWidget {
                                     try {
                                       await ref.read(deleteProductProvider);
                                       ref.read(productsNotifierProvider.notifier).deleteProduct();
+                                      ref.read(orderNotifierProvider.notifier).deleteOrdersByProductId();
                                       GoRouter.of(context).pop();
                                     } catch (e) {
                                       ScaffoldMessenger.of(context).showSnackBar(
