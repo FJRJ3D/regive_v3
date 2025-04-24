@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:regive_v3/navigators/TabBarWidget.dart';
 import 'package:regive_v3/screens/FoundObjectsScreen.dart';
 import 'package:regive_v3/screens/LoginScreen.dart';
+import 'package:regive_v3/screens/MyRequestScreen.dart';
 import 'package:regive_v3/screens/ProductDetailsScreen.dart';
 import 'package:regive_v3/screens/RegisterScreen.dart';
 
@@ -23,6 +24,7 @@ class AppNavigator {
           builder: (context, state) => ProductDetailsScreen(),
         ),
         GoRoute(path: '/search', builder: (context, state) => const FoundObjectsScreen()),
+        GoRoute(path: '/my-orders', builder: (context, state) => const MyRequestScreen()),
       ],
     );
   }
