@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:regive_v3/components/ProductCard.dart';
-import 'package:regive_v3/components/SearchComponent.dart';
+import 'package:regive_v3/components/OrderCard.dart';
 import 'package:regive_v3/providers/global_providers.dart';
 
 class OrdersScreen extends ConsumerStatefulWidget {
@@ -39,7 +38,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
     final userProductsAsync = ref.watch(productsNotifierProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white.withAlpha(0),
+      backgroundColor: Colors.transparent,
       body: Align(
         alignment: Alignment.topCenter,
         child: CustomScrollView(
@@ -48,7 +47,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
             SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
                 final product = userProductsAsync[index];
-                return ProductCard(product: product.product);
+                return OrderCard(product: product.product);
               }, childCount: userProductsAsync.length),
             ),
           ],

@@ -36,42 +36,43 @@ class _MyRequestScreenState extends ConsumerState<MyRequestScreen> {
   @override
   Widget build(BuildContext context) {
     final orderWithProduct = ref.watch(orderNotifierProvider);
-    return Scaffold(
-      backgroundColor: Color(0xFFF3E4CF),
-      body: SafeArea(
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'My requests',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, ),
-                ),
-              ),
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                'My requests',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final order = orderWithProduct[index];
-                final product = order.product!;
-                String orderStatus;
-                if (order.productOrder.isAccepted == true && order.productOrder.isFinished == true) {
-                  orderStatus = 'Accepted';
-                } else if (!order.productOrder.isAccepted && order.productOrder.isFinished) {
-                  orderStatus = 'Canceled';
-                } else {
-                  orderStatus = 'Waiting';
-                }
-                return ProductCard(product: product, status: orderStatus, orderId: order.productOrder.id);
-              }, childCount: orderWithProduct.length),
-            ),
-          ],
+          ),
         ),
-      ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final order = orderWithProduct[index];
+            final product = order.product!;
+            String orderStatus;
+            if (order.productOrder.isAccepted == true &&
+                order.productOrder.isFinished == true) {
+              orderStatus = 'Accepted';
+            } else if (!order.productOrder.isAccepted &&
+                order.productOrder.isFinished) {
+              orderStatus = 'Canceled';
+            } else {
+              orderStatus = 'Waiting';
+            }
+            return ProductCard(
+              product: product,
+              status: orderStatus,
+              orderId: order.productOrder.id,
+            );
+          }, childCount: orderWithProduct.length),
+        ),
+      ],
     );
   }
 }

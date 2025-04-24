@@ -23,7 +23,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   }
 
   void _onScroll() {
-    if(_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100) {
       ref.read(productsNotifierProvider.notifier).loadMoreProducts();
     }
   }
@@ -38,33 +39,23 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   Widget build(BuildContext context) {
     final productsWithUsers = ref.watch(productsNotifierProvider);
 
-    return Scaffold(
-      backgroundColor: Color(0xFFF3E4CF),
-      body: SafeArea(
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding (
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-              child: SearchComponent(),
-      ),
-            ),
-            SliverToBoxAdapter(
-              child: CategoriesComponent(),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final product = productsWithUsers[index];
-                  return ProductWithOwnerComponent(item: product);
-                },
-                childCount: productsWithUsers.length,
-              ),
-            ),
-          ],
+            child: SearchComponent(),
+          ),
         ),
-      ),
+        SliverToBoxAdapter(child: CategoriesComponent()),
+        SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final product = productsWithUsers[index];
+            return ProductWithOwnerComponent(item: product);
+          }, childCount: productsWithUsers.length),
+        ),
+      ],
     );
   }
 }

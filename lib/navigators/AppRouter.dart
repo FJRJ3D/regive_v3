@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:regive_v3/navigators/TabBarWidget.dart';
 import 'package:regive_v3/screens/FoundObjectsScreen.dart';
@@ -24,7 +26,19 @@ class AppNavigator {
           builder: (context, state) => ProductDetailsScreen(),
         ),
         GoRoute(path: '/search', builder: (context, state) => const FoundObjectsScreen()),
-        GoRoute(path: '/orders', builder: (context, state) => const OrdersScreen()),
+        GoRoute(
+          path: '/orders',
+          pageBuilder: (context, state) => CustomTransitionPage<void>(
+            key: state.pageKey,
+            child: const OrdersScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            opaque: false,
+            barrierColor: Colors.transparent,
+          ),
+        ),
+
       ],
     );
   }
