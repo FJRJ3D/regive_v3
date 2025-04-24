@@ -102,7 +102,7 @@ class ProductDetailsScreen extends ConsumerWidget {
                                 ),
                               ),
                               onPressed: () {
-                                print("button pressed");
+                                GoRouter.of(context).push('/orders');
                               },
                               backgroundColor: const Color(0xFFE66A35),
                               foregroundColor: Colors.white,),
