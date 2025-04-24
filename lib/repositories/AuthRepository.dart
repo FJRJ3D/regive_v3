@@ -92,3 +92,8 @@ Future<User?> getUser(GetUserRef ref) async {
   }
   return user;
 }
+
+@riverpod
+Stream<User?> authState(AuthStateRef, ref) {
+  return FirebaseAuth.instance.authStateChanges();
+}

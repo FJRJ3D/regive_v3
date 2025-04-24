@@ -387,5 +387,120 @@ final getUserProvider = AutoDisposeFutureProvider<User?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetUserRef = AutoDisposeFutureProviderRef<User?>;
+String _$authStateHash() => r'28d854fc7c18076adccff51bca0c9ec8eb764b68';
+
+/// See also [authState].
+@ProviderFor(authState)
+const authStateProvider = AuthStateFamily();
+
+/// See also [authState].
+class AuthStateFamily extends Family<AsyncValue<User?>> {
+  /// See also [authState].
+  const AuthStateFamily();
+
+  /// See also [authState].
+  AuthStateProvider call(dynamic ref) {
+    return AuthStateProvider(ref);
+  }
+
+  @override
+  AuthStateProvider getProviderOverride(covariant AuthStateProvider provider) {
+    return call(provider.ref);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'authStateProvider';
+}
+
+/// See also [authState].
+class AuthStateProvider extends AutoDisposeStreamProvider<User?> {
+  /// See also [authState].
+  AuthStateProvider(dynamic ref)
+    : this._internal(
+        (ref) => authState(ref as AuthStateRef, ref),
+        from: authStateProvider,
+        name: r'authStateProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$authStateHash,
+        dependencies: AuthStateFamily._dependencies,
+        allTransitiveDependencies: AuthStateFamily._allTransitiveDependencies,
+        ref: ref,
+      );
+
+  AuthStateProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.ref,
+  }) : super.internal();
+
+  final dynamic ref;
+
+  @override
+  Override overrideWith(Stream<User?> Function(AuthStateRef provider) create) {
+    return ProviderOverride(
+      origin: this,
+      override: AuthStateProvider._internal(
+        (ref) => create(ref as AuthStateRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        ref: ref,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<User?> createElement() {
+    return _AuthStateProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AuthStateProvider && other.ref == ref;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, ref.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin AuthStateRef on AutoDisposeStreamProviderRef<User?> {
+  /// The parameter `ref` of this provider.
+  dynamic get ref;
+}
+
+class _AuthStateProviderElement extends AutoDisposeStreamProviderElement<User?>
+    with AuthStateRef {
+  _AuthStateProviderElement(super.provider);
+
+  @override
+  dynamic get ref => (origin as AuthStateProvider).ref;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
