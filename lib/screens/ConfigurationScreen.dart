@@ -27,19 +27,25 @@ class ConfigurationScreen extends ConsumerWidget {
           return detailsAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => Center(child: Text('Error loading details: $e')),
-            data: (details) => _buildProfile(context, details, user),
+            data: (details) => _buildProfile(context, details, user, ref),
           );
         },
       ),
     );
   }
 
-  Widget _buildProfile(BuildContext context, UserDetails details, User authUser) {
+
+  Widget _buildProfile(BuildContext context, UserDetails details, User authUser, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          ElevatedButton(onPressed: () async {
+            ref.read(signOutProvider);
+          GoRouter.of(context).go('/');
+          },
+         child: Text('Leave')),
           Center(
             child: CircleAvatar(
               radius: 50,
