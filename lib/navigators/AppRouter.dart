@@ -10,6 +10,9 @@ import 'package:regive_v3/screens/OrdersScreen.dart';
 import 'package:regive_v3/screens/MyRequestScreen.dart';
 import 'package:regive_v3/screens/ProductDetailsScreen.dart';
 import 'package:regive_v3/screens/RegisterScreen.dart';
+import 'package:regive_v3/screens/user_additional_screen/HelpAndSupportScreen.dart';
+import 'package:regive_v3/screens/user_additional_screen/UserChangeDataScreen.dart';
+import 'package:regive_v3/screens/user_additional_screen/UserDataScreen.dart';
 
 class AppNavigator {
   late final GoRouter _router;
@@ -40,6 +43,12 @@ class AppNavigator {
           ),
         ),
         GoRoute(path: '/my-orders', builder: (context, state) => const MyRequestScreen(),
+        ),
+        GoRoute(path: '/user-data', builder: (context, state) => const UserDataScreen(),
+        ),
+        GoRoute(path: '/change-data', builder: (context, state) => const UserChangeDataScreen(),
+        ),
+        GoRoute(path: '/support', builder: (context, state) => const HelpAndSupportScreen(),
         ),
       ],
 

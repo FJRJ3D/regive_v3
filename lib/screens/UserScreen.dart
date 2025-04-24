@@ -6,8 +6,8 @@ import 'package:regive_v3/models/UserDetails.dart';
 import 'package:regive_v3/repositories/AuthRepository.dart';
 import 'package:regive_v3/repositories/user_details_repository.dart';
 import 'package:regive_v3/utils/date_format.dart';
-class ConfigurationScreen extends ConsumerWidget {
-  const ConfigurationScreen({super.key});
+class UserScreen extends ConsumerWidget {
+  const UserScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authAsync = ref.watch(getUserProvider);
@@ -89,6 +89,11 @@ class ConfigurationScreen extends ConsumerWidget {
               ),
             ],
           ),
+          Center(
+            child:
+          Stack(
+            alignment: Alignment.bottomRight,
+            children: [
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -101,12 +106,25 @@ class ConfigurationScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            child: Center(
               child: CircleAvatar(
                 radius: 50,
                 backgroundImage: NetworkImage(details.imageUrl),
               ),
             ),
+              Container(
+                padding: const EdgeInsets.all(2),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  backgroundColor: Colors.amber,
+                  radius: 14,
+                  child: IconButton(onPressed: () {}, icon: const Icon(Icons.camera_alt, color: Colors.brown, size: 12,)),
+                ),
+              )
+            ],
+          ),
           ),
           const SizedBox(height: 16),
           Center(
@@ -144,12 +162,15 @@ class ConfigurationScreen extends ConsumerWidget {
                 mainAxisSpacing: 16,
                 children: [
                   _buildTitle(context, "Your data", Icons.date_range, () {
+                    GoRouter.of(context).push('/user-data');
                   }),
                   _buildTitle(context, "Change data", Icons.edit, () {
+                    GoRouter.of(context).push("/change-data");
                   }),
                   _buildTitle(context, "Activity history", Icons.history, () {
                   }),
                   _buildTitle(context, "Help & support", Icons.help, () {
+                    GoRouter.of(context).push("/support");
                   }),
                 ],
               ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:regive_v3/providers/global_providers.dart';
-import 'package:regive_v3/screens/ConfigurationScreen.dart';
+import 'package:regive_v3/screens/UserScreen.dart';
 import 'package:regive_v3/screens/MainScreen.dart';
 import 'package:regive_v3/screens/MessageScreen.dart';
 import 'package:regive_v3/screens/MyRequestScreen.dart';
@@ -22,7 +22,7 @@ class TabBarWidget extends ConsumerWidget {
       MyRequestScreen(),
       ProductManagerScreen(),
       MessageScreen(),
-      ConfigurationScreen(),
+      UserScreen(),
     ];
 
     void _onItemTapped(int index) {
