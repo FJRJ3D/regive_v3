@@ -37,9 +37,9 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
   Widget build(BuildContext context) {
     final userProductsAsync = ref.watch(productsNotifierProvider);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Align(
+    return Padding(
+      padding: const EdgeInsets.only(top: 126),
+      child: Align(
         alignment: Alignment.topCenter,
         child: CustomScrollView(
           controller: _scrollController,

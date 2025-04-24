@@ -1,27 +1,22 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:regive_v3/models/Product.dart';
 import 'package:regive_v3/providers/global_providers.dart';
-import 'package:regive_v3/repositories/order_repository.dart';
 
 class OrderCard extends ConsumerWidget {
   final Product product;
   final String? status;
   final String? orderId;
 
-  const OrderCard({
-    Key? key,
-    required this.product,
-    this.status,
-    this.orderId,
-  }) : super(key: key);
+  const OrderCard({Key? key, required this.product, this.status, this.orderId})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final orderCountAsync = ref.watch(getOrderCountByProductProvider(product.id));
-
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -42,155 +37,118 @@ class OrderCard extends ConsumerWidget {
           GoRouter.of(context).push('/product-details');
         },
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(100),
-                  blurRadius: 10,
-                  offset: Offset(0, 4),
-                ),
-              ],
-              color: Colors.white,
-            ),
-            width: double.infinity,
-            height: 140,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Row(
-                  children: [
-                    Stack(
-                      children: [
-                        SizedBox(
-                          width: constraints.maxWidth * 0.43,
-                          height: double.infinity,
-                          child: Image.network(
-                            product.imageUrl,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(
-                          width: constraints.maxWidth * 0.43,
-                          height: double.infinity,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 25,
-                              width: 120,
-                              decoration: BoxDecoration(
-                                color: Colors.black.withAlpha(150),
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5),
-                                ),
-                              ),
-                              child: Text(
-                                product.name,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+          padding:
+              const EdgeInsets.only(bottom: 10) +
+              EdgeInsets.symmetric(horizontal: 15),
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 75,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: Colors.transparent,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(100),
+                      blurRadius: 10,
+                      offset: Offset(0, 4),
                     ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.all(5),
+                  ],
+                ),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.white.withAlpha(170),
+                    ),
+                    width: double.infinity,
+                    height: 75,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6),
                               child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  DateFormat(
-                                    'yyyy-MM-dd HH:mm',
-                                  ).format(product.publishedDate.toDate()),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFF8D8D8D),
+                                alignment: Alignment.centerLeft,
+                                child: ClipOval(
+                                  child: SizedBox(
+                                    width: 67,
+                                    height: 67,
+                                    // width: constraints.maxWidth * 0.43,
+                                    // height: constraints.maxWidth * 0.80,
+                                    child: Image.network(
+                                      product.imageUrl,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Flexible(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 25,
+                                width: 120,
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withAlpha(150),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(5),
+                                    topRight: Radius.circular(5),
+                                  ),
+                                ),
                                 child: Text(
-                                  product.description,
-                                  maxLines: 3,
+                                  product.name,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                  maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Color(0xFF8D8D8D)),
                                 ),
                               ),
                             ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: orderCountAsync.when(
-                                  data:
-                                      (count) => Text(
-                                        'Orders: $count',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Color(0xFF8D8D8D),
-                                          fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Flexible(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          DateFormat('yyyy-MM-dd HH:mm').format(
+                                            product.publishedDate.toDate(),
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            color: Color(0xFF8D8D8D),
+                                          ),
                                         ),
                                       ),
-                                  loading:
-                                      () => Text(
-                                        'Loading...',
-                                        style: TextStyle(
-                                          color: Color(0xFF8D8D8D),
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                  error:
-                                      (e, _) => Text(
-                                        'Error',
-                                        style: TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        );
+                      },
                     ),
-                    if (orderId != null)
-                      TextButton(
-                        onPressed: () {
-                          ref
-                              .read(orderNotifierProvider.notifier)
-                              .deleteOrder(orderId!);
-                        },
-                        child: Text('Delete'),
-                      ),
-                  ],
-                );
-              },
-            ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
