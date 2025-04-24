@@ -5,6 +5,7 @@ import 'package:regive_v3/navigators/TabBarWidget.dart';
 import 'package:regive_v3/screens/FoundObjectsScreen.dart';
 import 'package:regive_v3/screens/LoginScreen.dart';
 import 'package:regive_v3/screens/OrdersScreen.dart';
+import 'package:regive_v3/screens/MyRequestScreen.dart';
 import 'package:regive_v3/screens/ProductDetailsScreen.dart';
 import 'package:regive_v3/screens/RegisterScreen.dart';
 
@@ -38,7 +39,7 @@ class AppNavigator {
             barrierColor: Colors.transparent,
           ),
         ),
-
+        GoRoute(path: '/my-orders', builder: (context, state) => const MyRequestScreen()),
       ],
     );
   }
