@@ -59,3 +59,5 @@ final orderNotifierProvider = StateNotifierProvider<OrderNotifier, List<OrderWit
 final showOwnerAndOrderProvider = StateProvider<bool>((ref) => true);
 
 final createProductUpdateProviderBool = StateProvider<bool>((ref) => true);
+
+final selectedOrderIdProvider = StateProvider<String>((ref) => '');

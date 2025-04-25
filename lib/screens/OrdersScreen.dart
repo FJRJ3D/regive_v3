@@ -36,6 +36,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
   @override
   Widget build(BuildContext context) {
     final userProductsAsync = ref.watch(productsNotifierProvider);
+    final selectedOrderId = ref.watch(selectedOrderIdProvider);
 
     return Padding(
       padding: const EdgeInsets.only(top: 126),
@@ -53,7 +54,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final product = userProductsAsync[index];
-                  return OrderCard(product: product.product);
+                  return OrderCard(product: product.product, selectedOrderId: selectedOrderId,);
                 }, childCount: userProductsAsync.length),
               ),
             ],

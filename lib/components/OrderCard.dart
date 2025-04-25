@@ -3,15 +3,23 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:regive_v3/components/CustomElevatedButton.dart';
 import 'package:regive_v3/models/Product.dart';
+import 'package:regive_v3/providers/global_providers.dart';
 
 class OrderCard extends ConsumerWidget {
   final Product product;
   final String? status;
   final String? orderId;
+  final String selectedOrderId;
 
-  const OrderCard({Key? key, required this.product, this.status, this.orderId})
-    : super(key: key);
+  const OrderCard({
+    Key? key,
+    required this.product,
+    this.status,
+    this.orderId,
+    required this.selectedOrderId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +46,11 @@ class OrderCard extends ConsumerWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(100),
-                  onTap: () {},
+                  onTap: () {
+                    final current = ref.read(selectedOrderIdProvider);
+                    ref.read(selectedOrderIdProvider.notifier).state =
+                        current == product.id ? '' : product.id;
+                  },
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       return Padding(
@@ -113,6 +125,98 @@ class OrderCard extends ConsumerWidget {
                                 ),
                               ],
                             ),
+                            if (product.id == selectedOrderId)
+                              // const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 4,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 15,
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Necesito este lote de ropa para mi sobrino que acaba de cumplir 4 años",
+                                          style: TextStyle(
+                                            color: Color(0xFF636363),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Container(
+                                              height: 50,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withAlpha(100),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 4,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: TextField(
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                decoration: InputDecoration(
+                                                  labelText: "Message",
+                                                  hintText: "Write",
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          50,
+                                                        ),
+                                                    borderSide: BorderSide.none,
+                                                  ),
+                                                  suffixIcon: IconButton(
+                                                    icon: Icon(Icons.send),
+                                                    onPressed: () {
+                                                      print("Send message");
+                                                    },
+                                                  ),
+                                                  fillColor: Colors.white,
+                                                  filled: true,
+                                                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: CustomElevatedButton(
+                                            text: "Accept",
+                                            onPressed: () {
+                                              print("buttom pressed");
+                                            },
+                                            backgroundColor: const Color(
+                                              0xFFE66A35,
+                                            ),
+                                            foregroundColor: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
                           ],
                         ),
                       );
@@ -123,7 +227,7 @@ class OrderCard extends ConsumerWidget {
             ),
           ),
         ),
-      )
+      ),
     );
   }
 }
