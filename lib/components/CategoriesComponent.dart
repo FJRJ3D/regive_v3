@@ -40,20 +40,16 @@ class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
 
                 return GestureDetector(
                   onTap: () {
-                    if(selectedCategoryId == category.id) {
-                      ref.watch(selectedCategoryIdProvider.notifier).state = selectedCategoryId = null;
-                    } else {
-                      ref.watch(selectedCategoryIdProvider.notifier).state = category.id;
-                    }
                     setState(() {
                       if (selectedCategoryId == category.id) {
                         selectedCategoryId = null;
                         selectedCategoryName = null;
-                        ref.read(activeCategoryDataProvider.notifier).state =
-                            {};
+                        ref.read(selectedCategoryIdProvider.notifier).state = null;
+                        ref.read(activeCategoryDataProvider.notifier).state = {};
                       } else {
                         selectedCategoryId = category.id;
                         selectedCategoryName = category.name;
+                        ref.read(selectedCategoryIdProvider.notifier).state = selectedCategoryId;
                         ref.read(activeCategoryDataProvider.notifier).state = {
                           'id': selectedCategoryId,
                           'categoryName': selectedCategoryName,
@@ -67,12 +63,11 @@ class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
                       CircleAvatar(
                         radius: 34,
                         backgroundColor:
-                            isSelected ? Colors.blue[200] : Colors.blue[100],
-                        backgroundImage:
-                            category.imageUrl != null
-                                ? NetworkImage(category.imageUrl!)
-                                : const AssetImage('assets/no_image.png')
-                                    as ImageProvider,
+                        isSelected ? Colors.blue[200] : Colors.blue[100],
+                        backgroundImage: category.imageUrl != null
+                            ? NetworkImage(category.imageUrl!)
+                            : const AssetImage('assets/no_image.png')
+                        as ImageProvider,
                       ),
                       const SizedBox(height: 6),
                       Padding(
@@ -82,9 +77,7 @@ class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight:
-                                isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                           ),
                           textAlign: TextAlign.center,
                           maxLines: 2,
@@ -96,25 +89,22 @@ class _CategoriesComponentState extends ConsumerState<CategoriesComponent> {
                 );
               },
             ),
-
             if (selectedCategoryId != null)
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        '',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      '',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SubcategoryComponent(),
-                  ],
-                ),
+                  ),
+                  SubcategoryComponent(),
+                ],
               ),
           ],
         );

@@ -50,7 +50,7 @@ class _SearchComponentState extends ConsumerState<SearchComponent> {
             child: TextField(
               controller: _controller,
               decoration: const InputDecoration(
-                hintText: 'Search...',
+                hintText: ' Search...',
                 border: InputBorder.none,
               ),
               onSubmitted: (_) => _startSearch(),

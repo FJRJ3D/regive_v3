@@ -39,23 +39,27 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   Widget build(BuildContext context) {
     final productsWithUsers = ref.watch(productsNotifierProvider);
 
-    return CustomScrollView(
+    return ListView.builder(
       controller: _scrollController,
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      itemCount: productsWithUsers.length + 2,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: SearchComponent(),
-          ),
-        ),
-        SliverToBoxAdapter(child: CategoriesComponent()),
-        SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            final product = productsWithUsers[index];
-            return ProductWithOwnerComponent(item: product);
-          }, childCount: productsWithUsers.length),
-        ),
-      ],
+          );
+        } else if (index == 1) {
+          return Column(
+            children: [
+              const SizedBox(height: 8),
+              CategoriesComponent(),
+            ],
+          );
+        } else {
+          final product = productsWithUsers[index - 2];
+          return ProductWithOwnerComponent(item: product);
+        }
+      },
     );
   }
 }
