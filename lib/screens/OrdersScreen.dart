@@ -41,16 +41,23 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
       padding: const EdgeInsets.only(top: 126),
       child: Align(
         alignment: Alignment.topCenter,
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final product = userProductsAsync[index];
-                return OrderCard(product: product.product);
-              }, childCount: userProductsAsync.length),
-            ),
-          ],
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(
+            overscroll: false,
+            physics:
+                BouncingScrollPhysics(), // o ClampingScrollPhysics() para Android
+          ),
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final product = userProductsAsync[index];
+                  return OrderCard(product: product.product);
+                }, childCount: userProductsAsync.length),
+              ),
+            ],
+          ),
         ),
       ),
     );
