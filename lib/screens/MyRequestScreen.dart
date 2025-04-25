@@ -41,12 +41,26 @@ class _MyRequestScreenState extends ConsumerState<MyRequestScreen> {
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                'My requests',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 20),
+           child: Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'My requests',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    color: Colors.brown,
+                  ),
+                ),
               ),
             ),
           ),
