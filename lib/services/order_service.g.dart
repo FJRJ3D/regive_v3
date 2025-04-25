@@ -6,7 +6,7 @@ part of 'order_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$orderServiceHash() => r'40ca273ea15d85f321e47f18b378ba224cd4dfc3';
+String _$orderServiceHash() => r'cc0151f436c3557edec7d1bc01721f2bc8c615d3';
 
 /// See also [orderService].
 @ProviderFor(orderService)
@@ -169,5 +169,26 @@ class _FetchOrderWithProductProviderElement
   String get userId => (origin as FetchOrderWithProductProvider).userId;
 }
 
+String _$fetchOrderWithUserDetailsHash() =>
+    r'eb0be11a610fe7792d6e55253dcbccfd097b2d1b';
+
+/// See also [fetchOrderWithUserDetails].
+@ProviderFor(fetchOrderWithUserDetails)
+final fetchOrderWithUserDetailsProvider =
+    AutoDisposeFutureProvider<List<OrderWithUserDetails>>.internal(
+      fetchOrderWithUserDetails,
+      name: r'fetchOrderWithUserDetailsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fetchOrderWithUserDetailsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef FetchOrderWithUserDetailsRef =
+    AutoDisposeFutureProviderRef<List<OrderWithUserDetails>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

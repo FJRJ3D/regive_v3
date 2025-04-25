@@ -6,6 +6,7 @@ import 'package:regive_v3/providers/products_search_notifier.dart';
 import 'package:regive_v3/services/order_service.dart';
 import 'package:regive_v3/services/product_service.dart';
 import 'package:regive_v3/view_models/OrderWithProduct.dart';
+import 'package:regive_v3/view_models/OrderWithUserDetails.dart';
 import 'package:regive_v3/view_models/ProductWithUser.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -61,3 +62,10 @@ final showOwnerAndOrderProvider = StateProvider<bool>((ref) => true);
 final createProductUpdateProviderBool = StateProvider<bool>((ref) => true);
 
 final selectedOrderIdProvider = StateProvider<String>((ref) => '');
+
+final orderWithUserDetailsNotifierProvider = StateNotifierProvider<OrderNotifierWithUserDetails, List<OrderWithUserDetails>>(
+      (ref) {
+    final orderService = ref.watch(orderServiceProvider);
+    return OrderNotifierWithUserDetails(orderService, ref);
+  },
+);

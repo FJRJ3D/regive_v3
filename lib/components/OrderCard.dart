@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:regive_v3/components/CustomElevatedButton.dart';
-import 'package:regive_v3/models/Product.dart';
+import 'package:regive_v3/models/UserDetails.dart';
 import 'package:regive_v3/providers/global_providers.dart';
 
 class OrderCard extends ConsumerWidget {
-  final Product product;
+  final UserDetails userDetails;
   final String? status;
   final String? orderId;
   final String selectedOrderId;
 
   const OrderCard({
     Key? key,
-    required this.product,
+    required this.userDetails,
     this.status,
     this.orderId,
     required this.selectedOrderId,
@@ -49,7 +49,7 @@ class OrderCard extends ConsumerWidget {
                   onTap: () {
                     final current = ref.read(selectedOrderIdProvider);
                     ref.read(selectedOrderIdProvider.notifier).state =
-                        current == product.id ? '' : product.id;
+                        current == userDetails.id ? '' : userDetails.id;
                   },
                   child: LayoutBuilder(
                     builder: (context, constraints) {
@@ -70,7 +70,7 @@ class OrderCard extends ConsumerWidget {
                                       width: 67,
                                       height: 67,
                                       child: Image.network(
-                                        product.imageUrl,
+                                        userDetails.imageUrl,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -90,7 +90,7 @@ class OrderCard extends ConsumerWidget {
                                       ),
                                     ),
                                     child: Text(
-                                      product.name,
+                                      userDetails.username,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -109,7 +109,7 @@ class OrderCard extends ConsumerWidget {
                                         alignment: Alignment.centerRight,
                                         child: Text(
                                           DateFormat('yyyy-MM-dd HH:mm').format(
-                                            product.publishedDate.toDate(),
+                                            userDetails.wasOnline.toDate(),
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -125,7 +125,7 @@ class OrderCard extends ConsumerWidget {
                                 ),
                               ],
                             ),
-                            if (product.id == selectedOrderId)
+                            if (userDetails.id == selectedOrderId)
                               // const SizedBox(height: 10),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -142,7 +142,7 @@ class OrderCard extends ConsumerWidget {
                                       child: Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
-                                          "Necesito este lote de ropa para mi sobrino que acaba de cumplir 4 años",
+                                          "Necesito este lote de ropa para mi sobrino que acaba de cumplir 4 años.",
                                           style: TextStyle(
                                             color: Color(0xFF636363),
                                           ),

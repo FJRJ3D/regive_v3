@@ -17,13 +17,13 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    ref.read(productsNotifierProvider.notifier).loadMoreProducts();
+    ref.read(orderWithUserDetailsNotifierProvider.notifier).loadMoreOrders();
   }
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 100) {
-      ref.read(productsNotifierProvider.notifier).loadMoreProducts();
+      ref.read(orderWithUserDetailsNotifierProvider.notifier).loadMoreOrders();
     }
   }
 
@@ -35,7 +35,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProductsAsync = ref.watch(productsNotifierProvider);
+    final ordersWithUserDetailsAsync = ref.watch(orderWithUserDetailsNotifierProvider);
     final selectedOrderId = ref.watch(selectedOrderIdProvider);
 
     return Padding(
@@ -53,9 +53,9 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
             slivers: [
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  final product = userProductsAsync[index];
-                  return OrderCard(product: product.product, selectedOrderId: selectedOrderId,);
-                }, childCount: userProductsAsync.length),
+                  final ordersWithUserDetails = ordersWithUserDetailsAsync[index];
+                  return OrderCard(userDetails: ordersWithUserDetails.userDetails!, selectedOrderId: selectedOrderId,);
+                }, childCount: ordersWithUserDetailsAsync.length),
               ),
             ],
           ),
