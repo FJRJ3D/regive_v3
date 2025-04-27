@@ -560,5 +560,136 @@ class _GetOrderCountByProductProviderElement
   String get productId => (origin as GetOrderCountByProductProvider).productId;
 }
 
+String _$orderExistsHash() => r'338cf20e1663aaef5d312ce4ae16ebc7bbfe8347';
+
+/// See also [orderExists].
+@ProviderFor(orderExists)
+const orderExistsProvider = OrderExistsFamily();
+
+/// See also [orderExists].
+class OrderExistsFamily extends Family<AsyncValue<bool>> {
+  /// See also [orderExists].
+  const OrderExistsFamily();
+
+  /// See also [orderExists].
+  OrderExistsProvider call(String userId, String productId) {
+    return OrderExistsProvider(userId, productId);
+  }
+
+  @override
+  OrderExistsProvider getProviderOverride(
+    covariant OrderExistsProvider provider,
+  ) {
+    return call(provider.userId, provider.productId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'orderExistsProvider';
+}
+
+/// See also [orderExists].
+class OrderExistsProvider extends AutoDisposeFutureProvider<bool> {
+  /// See also [orderExists].
+  OrderExistsProvider(String userId, String productId)
+    : this._internal(
+        (ref) => orderExists(ref as OrderExistsRef, userId, productId),
+        from: orderExistsProvider,
+        name: r'orderExistsProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$orderExistsHash,
+        dependencies: OrderExistsFamily._dependencies,
+        allTransitiveDependencies: OrderExistsFamily._allTransitiveDependencies,
+        userId: userId,
+        productId: productId,
+      );
+
+  OrderExistsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.userId,
+    required this.productId,
+  }) : super.internal();
+
+  final String userId;
+  final String productId;
+
+  @override
+  Override overrideWith(
+    FutureOr<bool> Function(OrderExistsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: OrderExistsProvider._internal(
+        (ref) => create(ref as OrderExistsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        userId: userId,
+        productId: productId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<bool> createElement() {
+    return _OrderExistsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is OrderExistsProvider &&
+        other.userId == userId &&
+        other.productId == productId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, userId.hashCode);
+    hash = _SystemHash.combine(hash, productId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin OrderExistsRef on AutoDisposeFutureProviderRef<bool> {
+  /// The parameter `userId` of this provider.
+  String get userId;
+
+  /// The parameter `productId` of this provider.
+  String get productId;
+}
+
+class _OrderExistsProviderElement extends AutoDisposeFutureProviderElement<bool>
+    with OrderExistsRef {
+  _OrderExistsProviderElement(super.provider);
+
+  @override
+  String get userId => (origin as OrderExistsProvider).userId;
+  @override
+  String get productId => (origin as OrderExistsProvider).productId;
+}
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

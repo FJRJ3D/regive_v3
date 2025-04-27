@@ -13,6 +13,12 @@ class OrderRepository {
   OrderRepository(this.firestore);
 
   Future<String> createAnOrder(String userId, String productId, String reason) async {
+    final exists = await orderExists(userId, productId);
+
+    if (exists) {
+      throw Exception('Order with this userId and productId already exists.');
+    }
+
     final orderRef = firestore.collection('orders').doc();
 
     final orderData = {
@@ -23,9 +29,21 @@ class OrderRepository {
       'productId': productId,
       'userId': userId,
     };
+
     await orderRef.set(orderData);
     return 'Order was created';
   }
+
+  Future<bool> orderExists(String userId, String productId) async {
+    final querySnapshot = await firestore
+        .collection('orders')
+        .where('userId', isEqualTo: userId)
+        .where('productId', isEqualTo: productId)
+        .get();
+
+    return querySnapshot.docs.isNotEmpty;
+  }
+
 
   Future<List<ProductOrder>> fetchOrdersByUserId(Ref ref, String userId) async {
     final lastOrderDoc = ref.read(lastOrderDocProvider);
@@ -82,3 +100,10 @@ Future<int> getOrderCountByProduct(Ref ref, String productId) async {
 
   return querySnapshot.size;
 }
+
+@riverpod
+Future<bool> orderExists(OrderExistsRef ref, String userId, String productId) async {
+  final repo = ref.watch(orderRepositoryProvider);
+  return repo.orderExists(userId, productId);
+}
+
