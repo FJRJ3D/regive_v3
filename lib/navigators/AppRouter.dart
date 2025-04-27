@@ -10,6 +10,7 @@ import 'package:regive_v3/screens/OrdersScreen.dart';
 import 'package:regive_v3/screens/MyRequestScreen.dart';
 import 'package:regive_v3/screens/ProductDetailsScreen.dart';
 import 'package:regive_v3/screens/RegisterScreen.dart';
+import 'package:regive_v3/screens/SearchInputScreen.dart';
 import 'package:regive_v3/screens/user_additional_screen/HelpAndSupportScreen.dart';
 import 'package:regive_v3/screens/user_additional_screen/UserChangeDataScreen.dart';
 import 'package:regive_v3/screens/user_additional_screen/UserDataScreen.dart';
@@ -49,6 +50,25 @@ class AppNavigator {
         GoRoute(path: '/change-data', builder: (context, state) => const UserChangeDataScreen(),
         ),
         GoRoute(path: '/support', builder: (context, state) => const HelpAndSupportScreen(),
+        ),
+        GoRoute(
+          path: '/search/input',
+          pageBuilder: (context, state) => CustomTransitionPage(
+            key: state.pageKey,
+            child: const SearchInputScreen(),
+            transitionsBuilder: (context, anim, secAnim, child) {
+              return FadeTransition(
+                opacity: anim,
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, 1),
+                    end: Offset.zero,
+                  ).animate(anim),
+                  child: child,
+                ),
+              );
+            },
+          ),
         ),
       ],
 
