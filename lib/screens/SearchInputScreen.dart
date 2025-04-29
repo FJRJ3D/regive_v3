@@ -34,9 +34,6 @@ class _SearchInputScreenState extends ConsumerState<SearchInputScreen> {
     final query = q.trim();
     if (query.isEmpty) return;
     ref.read(inputtedTextToSearchProvider.notifier).state = query;
-    ref.read(lastProductSearchedDocProvider.notifier).state = null;
-    ref.read(selectedSubcategoryIdProvider.notifier).state = null;
-    ref.read(selectedCategoryIdProvider.notifier).state = null;
     GoRouter.of(context).go('/search');
   }
 

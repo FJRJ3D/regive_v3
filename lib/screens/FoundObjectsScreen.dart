@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:regive_v3/components/CategoriesComponent.dart';
 import 'package:regive_v3/components/ProductWithOwnerComponent.dart';
 import 'package:regive_v3/components/SearchComponent.dart';
@@ -22,9 +23,8 @@ class _MainScreenState extends ConsumerState<FoundObjectsScreen> {
     _scrollController.addListener(_onScroll);
   }
 
-
   void _onScroll() {
-    if(_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
       ref.read(productSearchNotifierProvider.notifier).loadMoreSearchedProducts();
     }
   }
@@ -38,32 +38,26 @@ class _MainScreenState extends ConsumerState<FoundObjectsScreen> {
   @override
   Widget build(BuildContext context) {
     final productsWithUsers = ref.watch(productSearchNotifierProvider);
-    // return Consumer(
-    //     builder: (context, ref, _) {
-    //       final productsWithUsers = ref.watch(productSearchNotifierProvider);
-
-          // ref.listen(inputtedTextToSearchProvider, (_, __) {
-          //   ref.read(lastProductSearchedDocProvider.notifier).state = null;
-          //   ref.read(productSearchNotifierProvider.notifier).reset();
-          //   ref.read(productSearchNotifierProvider.notifier).loadMoreSearchedProducts();
-          // });
-          //
-          //
-          // ref.listen(selectedCategoryIdProvider, (_, __) {
-          //   ref.read(lastProductSearchedDocProvider.notifier).state = null;
-          //   ref.read(productSearchNotifierProvider.notifier).reset();
-          //   ref.read(productSearchNotifierProvider.notifier).loadMoreSearchedProducts();
-          // });
 
     return Scaffold(
-      backgroundColor: Color(0xFFF3E4CF),
+      backgroundColor: const Color(0xFFF3E4CF),
+      appBar: AppBar(
+        title: const Text('Found Products'),
+        backgroundColor: const Color(0xFFF3E4CF),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).go('/main');
+          },
+        ),
+      ),
       body: SafeArea(
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
             SliverToBoxAdapter(
-              child: Padding (
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 child: SearchComponent(),
               ),
             ),
@@ -80,6 +74,5 @@ class _MainScreenState extends ConsumerState<FoundObjectsScreen> {
         ),
       ),
     );
-        // });
   }
 }

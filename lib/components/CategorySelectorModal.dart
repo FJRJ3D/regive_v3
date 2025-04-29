@@ -106,7 +106,9 @@ class _CategorySelectorModalState extends ConsumerState<CategorySelectorModal> {
                       onPressed: (selectedCategoryId != null && selectedSubcategoryId != null)
                           ? () {
                         ref.read(selectedCategoryIdProvider.notifier).state = selectedCategoryId;
+                        print('saved category id: $selectedCategoryId');
                         ref.read(selectedSubcategoryIdProvider.notifier).state = selectedSubcategoryId;
+                        print('saved subcategory id: $selectedSubcategoryId');
                         Navigator.of(context).pop();
                       }
                           : null,
