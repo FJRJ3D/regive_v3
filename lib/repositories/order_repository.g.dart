@@ -315,6 +315,134 @@ class _FetchOrdersByUserIdProviderElement
   String get userId => (origin as FetchOrdersByUserIdProvider).userId;
 }
 
+String _$fetchOrdersByProductIdHash() =>
+    r'61597a73265f2032ed56e2c4bef703874f41156a';
+
+/// See also [fetchOrdersByProductId].
+@ProviderFor(fetchOrdersByProductId)
+const fetchOrdersByProductIdProvider = FetchOrdersByProductIdFamily();
+
+/// See also [fetchOrdersByProductId].
+class FetchOrdersByProductIdFamily
+    extends Family<AsyncValue<List<ProductOrder>>> {
+  /// See also [fetchOrdersByProductId].
+  const FetchOrdersByProductIdFamily();
+
+  /// See also [fetchOrdersByProductId].
+  FetchOrdersByProductIdProvider call(String productId) {
+    return FetchOrdersByProductIdProvider(productId);
+  }
+
+  @override
+  FetchOrdersByProductIdProvider getProviderOverride(
+    covariant FetchOrdersByProductIdProvider provider,
+  ) {
+    return call(provider.productId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'fetchOrdersByProductIdProvider';
+}
+
+/// See also [fetchOrdersByProductId].
+class FetchOrdersByProductIdProvider
+    extends AutoDisposeFutureProvider<List<ProductOrder>> {
+  /// See also [fetchOrdersByProductId].
+  FetchOrdersByProductIdProvider(String productId)
+    : this._internal(
+        (ref) =>
+            fetchOrdersByProductId(ref as FetchOrdersByProductIdRef, productId),
+        from: fetchOrdersByProductIdProvider,
+        name: r'fetchOrdersByProductIdProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$fetchOrdersByProductIdHash,
+        dependencies: FetchOrdersByProductIdFamily._dependencies,
+        allTransitiveDependencies:
+            FetchOrdersByProductIdFamily._allTransitiveDependencies,
+        productId: productId,
+      );
+
+  FetchOrdersByProductIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.productId,
+  }) : super.internal();
+
+  final String productId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<ProductOrder>> Function(FetchOrdersByProductIdRef provider)
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FetchOrdersByProductIdProvider._internal(
+        (ref) => create(ref as FetchOrdersByProductIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        productId: productId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<ProductOrder>> createElement() {
+    return _FetchOrdersByProductIdProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FetchOrdersByProductIdProvider &&
+        other.productId == productId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, productId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin FetchOrdersByProductIdRef
+    on AutoDisposeFutureProviderRef<List<ProductOrder>> {
+  /// The parameter `productId` of this provider.
+  String get productId;
+}
+
+class _FetchOrdersByProductIdProviderElement
+    extends AutoDisposeFutureProviderElement<List<ProductOrder>>
+    with FetchOrdersByProductIdRef {
+  _FetchOrdersByProductIdProviderElement(super.provider);
+
+  @override
+  String get productId => (origin as FetchOrdersByProductIdProvider).productId;
+}
+
 String _$deleteOrderByIdHash() => r'1695e62e3538add99fd9c6490a46c7ca11c8756c';
 
 /// See also [deleteOrderById].
@@ -560,7 +688,7 @@ class _GetOrderCountByProductProviderElement
   String get productId => (origin as GetOrderCountByProductProvider).productId;
 }
 
-String _$orderExistsHash() => r'338cf20e1663aaef5d312ce4ae16ebc7bbfe8347';
+String _$orderExistsHash() => r'5306d158612f12ceccf0a245d20d216659ee32fb';
 
 /// See also [orderExists].
 @ProviderFor(orderExists)

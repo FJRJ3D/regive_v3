@@ -1,11 +1,9 @@
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:regive_v3/models/Product.dart';
 import 'package:regive_v3/providers/global_providers.dart';
 import 'package:regive_v3/repositories/order_repository.dart';
 import 'package:regive_v3/services/order_service.dart';
 import 'package:regive_v3/view_models/OrderWithProduct.dart';
+import 'package:regive_v3/view_models/OrderWithUserDetails.dart';
 
 class OrderNotifier extends StateNotifier<List<OrderWithProduct>> {
   final OrderService orderService;
@@ -47,6 +45,45 @@ class OrderNotifier extends StateNotifier<List<OrderWithProduct>> {
 
       final uniqueNewOrders = newOrders.where((newOrders) {
         bool isDuplicate = state.any((existingOrder) => existingOrder.productOrder == newOrders.productOrder.id);
+
+        return !isDuplicate;
+      }).toList();
+
+      if(uniqueNewOrders.isNotEmpty) {
+        state = [...state, ...uniqueNewOrders];
+      }
+    } catch (error) {
+      print('Error loading more products: $error');
+    } finally {
+      _isLoading = false;
+      print('Loading process completed');
+    }
+  }
+}
+
+class OrderNotifierWithUserDetails extends StateNotifier<List<OrderWithUserDetails>> {
+  final OrderService orderService;
+  final Ref ref;
+  bool _isLoading = false;
+
+  OrderNotifierWithUserDetails(this.orderService, this.ref) : super([]) {
+    print('OrderNotifier initialized with empty state');
+  }
+
+  Future<void> loadMoreOrders() async {
+    if(_isLoading) {
+      print('Load more orders');
+      return;
+    }
+
+    _isLoading = true;
+
+    try {
+      final newOrders = await orderService.fetchOrderWithUserDetails(ref);
+
+      final uniqueNewOrders = newOrders.where((newOrders) {
+        bool isDuplicate = state.any((existingOrder) => existingOrder.productOrder.id == newOrders.productOrder.id
+        );
 
         return !isDuplicate;
       }).toList();

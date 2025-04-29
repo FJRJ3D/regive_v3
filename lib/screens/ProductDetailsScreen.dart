@@ -102,7 +102,26 @@ class ProductDetailsScreen extends ConsumerWidget {
                                 ),
                               ),
                               onPressed: () {
-                                GoRouter.of(context).push('/orders');
+                                orderCountAsync.when(
+                                  data: (count) {
+                                    if (count == 0) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('There are no orders available.'),
+                                          duration: Duration(seconds: 3),
+                                        ),
+                                      );
+                                    } else {
+                                      GoRouter.of(context).push('/orders');
+                                    }
+                                  },
+                                  loading: () {
+                                    print('Loading...');
+                                  },
+                                  error: (error, stack) {
+                                    print('Error: $error');
+                                  },
+                                );
                               },
                               backgroundColor: const Color(0xFFE66A35),
                               foregroundColor: Colors.white,),

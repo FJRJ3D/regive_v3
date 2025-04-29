@@ -62,6 +62,23 @@ class OrderRepository {
     return orderList;
   }
 
+  Future<List<ProductOrder>> fetchOrdersByProductId(Ref ref, String productId) async {
+    final lastOrderDoc = ref.read(lastOrderDocProvider);
+    Query<Map<String, dynamic>> query = firestore.collection('orders').where('productId', isEqualTo: productId);
+    if(lastOrderDoc != null) {
+      query = query.startAfterDocument(lastOrderDoc);
+      print('add to firebase last doc');
+    }
+    final ordersDoc = await query.limit(5).get();
+    if (ordersDoc.docs.isNotEmpty) {
+      ref.read(lastOrderDocProvider.notifier).state = ordersDoc.docs.last;
+      print('add last doc');
+    }
+    final orderList = ordersDoc.docs.map((doc) => ProductOrder.formDocumentSnapshot(doc)).toList();
+    print('order list: $orderList');
+    return orderList;
+  }
+
   Future<void> deleteOrderById(String orderId) async {
     return firestore.collection('orders').doc(orderId).delete();
   }
@@ -85,6 +102,12 @@ Future<List<ProductOrder>> fetchOrdersByUserId(FetchOrdersByUserIdRef ref, Strin
 }
 
 @riverpod
+Future<List<ProductOrder>> fetchOrdersByProductId(Ref ref, String productId) async{
+  final repo = ref.watch(orderRepositoryProvider);
+  return repo.fetchOrdersByProductId(ref, productId);
+}
+
+@riverpod
 Future<void> deleteOrderById(DeleteOrderByIdRef ref, String orderId) async {
   final repo = ref.watch(orderRepositoryProvider);
   return repo.deleteOrderById(orderId);
@@ -102,7 +125,7 @@ Future<int> getOrderCountByProduct(Ref ref, String productId) async {
 }
 
 @riverpod
-Future<bool> orderExists(OrderExistsRef ref, String userId, String productId) async {
+Future<bool> orderExists(Ref ref, String userId, String productId) async {
   final repo = ref.watch(orderRepositoryProvider);
   return repo.orderExists(userId, productId);
 }

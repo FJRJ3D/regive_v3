@@ -17,13 +17,13 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    ref.read(productsNotifierProvider.notifier).loadMoreProducts();
+    ref.read(orderWithUserDetailsNotifierProvider.notifier).loadMoreOrders();
   }
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 100) {
-      ref.read(productsNotifierProvider.notifier).loadMoreProducts();
+      ref.read(orderWithUserDetailsNotifierProvider.notifier).loadMoreOrders();
     }
   }
 
@@ -35,22 +35,30 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProductsAsync = ref.watch(productsNotifierProvider);
+    final ordersWithUserDetailsAsync = ref.watch(orderWithUserDetailsNotifierProvider);
+    final selectedOrderId = ref.watch(selectedOrderIdProvider);
 
     return Padding(
       padding: const EdgeInsets.only(top: 126),
       child: Align(
         alignment: Alignment.topCenter,
-        child: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final product = userProductsAsync[index];
-                return OrderCard(product: product.product);
-              }, childCount: userProductsAsync.length),
-            ),
-          ],
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(
+            overscroll: false,
+            physics:
+                BouncingScrollPhysics(), // o ClampingScrollPhysics() para Android
+          ),
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final ordersWithUserDetails = ordersWithUserDetailsAsync[index];
+                  return OrderCard(userDetails: ordersWithUserDetails.userDetails!, selectedOrderId: selectedOrderId,);
+                }, childCount: ordersWithUserDetailsAsync.length),
+              ),
+            ],
+          ),
         ),
       ),
     );
